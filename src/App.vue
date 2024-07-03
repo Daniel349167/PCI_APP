@@ -5,15 +5,11 @@
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
 
 export default {
   name: 'app',
-  components: {
-    HelloWorld
-  },
   mounted() {
-    console.log('Hello World');
+    console.log('App');
     console.dir(this.$router);
   }
 }

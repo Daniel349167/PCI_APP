@@ -1,8 +1,11 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
+import Splash from '@/views/Splash'
 import Login from '@/views/Login'
+import Signin from '@/views/Signin'
 import Home from '@/views/Home'
+import Projects from '@/views/Projects'
+import Support from '@/views/Support'
 
 Vue.use(Router)
 
@@ -10,8 +13,8 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'HelloWorld',
-      component: HelloWorld
+      name: 'Splash',
+      component: Splash
     },
     {
       path: '/login',
@@ -19,9 +22,24 @@ export default new Router({
       component: Login
     },
     {
+      path: '/signin',
+      name: 'Signin',
+      component: Signin
+    },
+    {
       path: '/home',
       name: 'Home',
       component: Home
+    },
+    {
+      path: '/projects',
+      name: 'Projects',
+      component: Projects
+    },
+    {
+      path: '/support',
+      name: 'Support',
+      component: Support
     }
   ]
 })
