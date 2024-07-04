@@ -1,17 +1,22 @@
+<script>
+
+import PCILogo from '@/assets/images/logo.png';
+</script>
 <template>
     <div>
-        <el-image src="https://www.svgrepo.com/show/508699/landscape-placeholder.svg" fit="fill"></el-image>
+        <el-image :src="logo" fit="contain" style="width: 80vw; height: 80vh"/>
     </div>
 </template>
 <script>
+
 export default {
   data() {
     return {
-      img: 'src/assets/images/logo.png'
+      logo: require('../assets/images/logo.png')
     }
   },
   mounted() {
-    console.log('Login');
+    console.log('Splash');
   }
 }
 </script>
