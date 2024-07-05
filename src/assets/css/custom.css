@@ -1,0 +1,26 @@
+.page-title {
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.input-label {
+    text-align: left;
+    float: left;
+    color: gray;
+}
+
+.el-input input {
+    background-color: lightgray;
+}
+
+.el-button--primary {
+    background-color: #2ECC74;
+    border-color: #2ECC74;
+}
+.el-input.is-active .el-input__inner, .el-input__inner:focus {
+    border-color: #2ECC74;
+}
+
+.el-card__body {
+    background-color: #2ECC74;
+}

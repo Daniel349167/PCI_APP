@@ -1,6 +1,6 @@
 <template>
     <div style="width: 90vw; margin: auto">
-		<div>
+		<div class="page-title">
 			SOPORTE
 		</div>
 		<div v-for="card in cards" :key="card.id" style="margin: 20px 0px">

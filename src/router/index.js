@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Splash from '@/views/Splash'
 import Login from '@/views/Login'
-import Signin from '@/views/Signin'
+import Signup from '@/views/Signup'
 import Home from '@/views/Home'
 import Projects from '@/views/Projects'
 import Support from '@/views/Support'
@@ -22,9 +22,9 @@ export default new Router({
       component: Login
     },
     {
-      path: '/signin',
-      name: 'Signin',
-      component: Signin
+      path: '/signup',
+      name: 'Signup',
+      component: Signup
     },
     {
       path: '/home',

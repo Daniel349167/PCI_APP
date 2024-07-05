@@ -1,6 +1,6 @@
 <template>
     <div style="width: 90vw; margin: auto">
-		<div>
+		<div class="page-title">
 			PROYECTOS
 		</div>
 		<div v-for="project in projects" :key="project.id" style="margin: 20px 0px">
