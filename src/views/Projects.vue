@@ -3,7 +3,8 @@
 		<div class="page-title">
 			PROYECTOS
 		</div>
-		<div v-for="project in projects" :key="project.id" style="margin: 20px 0px">
+        <div v-if="loading" v-loading="true" style="height: 160px"/>
+		<div v-for="(project, index) in projects" :key="index" style="margin: 20px 0px">
 			<el-card>
 				<el-row>
 					<el-col :span="8">
@@ -25,26 +26,39 @@
 </template>
 <script>
 import Navbar from '../components/Navbar.vue';
+import { auth } from "../assets/mixins/auth.js"; 
 export default {
-  components: {
+    components: {
     Navbar
-  },
-  data() {
-    return {
-	  logo: require('../assets/images/logo.png'),
-	  projects: []
-    }
-  },
-  mounted() {
+    },
+    mixins: [auth],	
+    data() {
+        return {
+            logo: require('../assets/images/logo.png'),
+            image_not_found: 'https://i0.wp.com/sunrisedaycamp.org/wp-content/uploads/2020/10/placeholder.png',
+            projects: [],
+            loading: true
+        }
+    },
+    mounted() {
     console.log('Projects');
-	for(let i=0;i<10;i++) {
-		this.projects.push({
-			id: i,
-			image: 'https://i0.wp.com/sunrisedaycamp.org/wp-content/uploads/2020/10/placeholder.png',
-			name: 'Proyecto ' + (i+1),
-			time: 'fecha y hora'
-		});
-	}
+
+	fetch(this.authBaseUrl()+'/api/projects', {
+        method: 'GET',
+        headers: this.authHeaders()
+    })
+        .then(resp => resp.json()) 
+        .then(data => {
+            console.dir(data);
+            this.loading = false;
+            for(var project of data) {
+                this.projects.push({
+                    image: project.image ? project.image : this.image_not_found,
+                    name: project.name,
+                    time: `${project.time.substr(0,10)} ${project.time.substr(11,8)}`
+                });
+            }
+        }); 
   }
 }
 </script>

@@ -13,7 +13,10 @@
   mounted() {
     console.log('Splash');
     setTimeout(() => {
-      this.$router.push('login');
+      if(localStorage.api_token)
+        this.$router.push('home');
+      else
+        this.$router.push('login');
     }, 2000);
   }
 }

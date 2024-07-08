@@ -17,6 +17,10 @@
     background-color: #2ECC74;
     border-color: #2ECC74;
 }
+.el-button--primary.isactive, .el-button--primary:active {
+    background-color: #2AB867;
+    border-color: #2AB867;
+}
 .el-input.is-active .el-input__inner, .el-input__inner:focus {
     border-color: #2ECC74;
 }

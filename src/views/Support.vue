@@ -3,23 +3,23 @@
 		<div class="page-title">
 			SOPORTE
 		</div>
-		<div style="margin: 20px 0px">
+		<div class="support-div">
 			<el-card>
-				<table style="width: 100%" >
+				<table>
 					<tr>
 						<th style="width: 80%; text-align: left">
 							Código de daño
 						</th>
-						<th style="width: 20%">
+						<th style="width: 20%; text-align: left">
 							Unidad
 						</th>
 					</tr>
-					<tr>
-						<td style="width: 80%; text-align: left">
-							1. aaa
+					<tr v-for="(item, index) in codes" :key="index">
+						<td style="text-align: left; vertical-align: top;">
+							{{index}}. {{item[0]}}
 						</td>
-						<td style="width: 20%">
-							a
+						<td style="text-align: left; padding-left: 20px; vertical-align: top;">
+							{{item[1]}}
 						</td>
 					</tr>
 				</table>
@@ -31,12 +31,12 @@
 							Lista de símbolos
 						</th>
 					</tr>
-					<tr>
-						<td style="width: 80%; text-align: left">
-							1. bbb
+					<tr v-for="(item, index) in symbols" :key="index">
+						<td style="text-align: right; vertical-align: top;">
+							{{item[0]}}:
 						</td>
-						<td style="width: 20%">
-							b
+						<td style="text-align: left; vertical-align: top;">
+							{{item[1]}}
 						</td>
 					</tr>
 				</table>
@@ -87,11 +87,14 @@ export default {
   },
   mounted() {
     console.log('Support');
-	for(let i=0;i<2;i++) {
-		this.cards.push({
-			id: i
-		});
-	}
   }
 }
 </script>
+<style>
+.support-div .el-card {
+	margin: 20px 0px;
+}
+.support-div table {
+	width: 100%;
+}
+</style>
