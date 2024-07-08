@@ -37,6 +37,9 @@ export default {
     },
     mounted() {
         console.log('Login');
+        fetch('https://api.sampleapis.com/coffee/hot')
+            .then(resp => resp.json()) 
+            .then(data => console.log(data[0].title)); 
     },
     methods: {
         goto(route) {

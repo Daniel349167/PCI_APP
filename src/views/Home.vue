@@ -5,10 +5,15 @@
         </div>
         <br>
         <p>Bienvenido a PCI Android, aquì podras determinar el valor del PCI de todas las unidades de muestra de tu proyeco mediante el ingreso de datos como el metrado,severidad y tipo de daño.</p>
+      <Navbar/>
     </div>
 </template>
 <script>
+import Navbar from '../components/Navbar.vue';
 export default {
+  components: {
+    Navbar
+  },
   data() {
     return {
 	    logo: require('../assets/images/logo.png')

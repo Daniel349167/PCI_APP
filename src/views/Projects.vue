@@ -10,17 +10,25 @@
 						<el-image :src="project.image" fit="contain"/>
 					</el-col>
 					<el-col :span="16" style="text-align: left; padding: 0px 20px">
-						{{ project.name }}
-						<br>
-						{{ project.time }}
+						<div>
+							{{ project.name }}
+						</div>
+						<div style="color: white;">
+							{{ project.time }}
+						</div>
 					</el-col>
 				</el-row>
 			</el-card>
 		</div>
+		<Navbar/>
     </div>
 </template>
 <script>
+import Navbar from '../components/Navbar.vue';
 export default {
+  components: {
+    Navbar
+  },
   data() {
     return {
 	  logo: require('../assets/images/logo.png'),
