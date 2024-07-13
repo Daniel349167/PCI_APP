@@ -16,7 +16,7 @@
 					</tr>
 					<tr v-for="(item, index) in codes" :key="index">
 						<td style="text-align: left; vertical-align: top;">
-							{{index}}. {{item[0]}}
+							{{index+1}}. {{item[0]}}
 						</td>
 						<td style="text-align: left; padding-left: 20px; vertical-align: top;">
 							{{item[1]}}

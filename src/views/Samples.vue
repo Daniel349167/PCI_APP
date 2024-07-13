@@ -1,38 +1,51 @@
 <template>
     <div style="width: 90vw; margin: auto">
 		<div class="page-title">
-			PROYECTOS
+			UNIDAD DE MUESTRA
+		</div>
+		<div class="page-title">
+			Proyecto {{ $route.params.sample }}
 		</div>
         <div v-if="loading" v-loading="true" style="height: 160px" />
-		<div v-for="(project, index) in projects" :key="index" style="margin: 20px 0px" @click="goto('/projects/'+(index+1))">
-			<el-card>
-				<el-row>
-					<el-col :span="8">
-						<el-image :src="project.image" fit="contain"/>
-					</el-col>
-					<el-col :span="16" style="text-align: left; padding: 0px 20px">
-						<div>
-							{{ project.name }}
-						</div>
-						<div style="color: white; font-size: 12px;">
-							{{ project.time }}
-						</div>
-					</el-col>
-				</el-row>
-			</el-card>
-		</div>
+		<div style="width: calc(100% - 60px);">
+            <div v-for="(project, index) in projects" :key="index" style="margin: 20px 0px" class="blue-card"
+                @click="goto('/projects/'+$route.params.sample+'/'+(index+1))"
+            >
+                <el-card>
+                    <el-row>
+                        <el-col :span="8">
+                            <el-image :src="project.image" fit="contain"/>
+                        </el-col>
+                        <el-col :span="16" style="text-align: left; padding: 0px 20px">
+                            <div>
+                                UM 
+                            </div>
+                            <div style="color: white; font-size: 12px;">
+                                {{ project.time }}
+                            </div>
+                        </el-col>
+                    </el-row>
+                </el-card>
+            </div>
+        </div>
         <div class="float">
-            <el-button @click="dialogVisible = true" icon="el-icon-plus" circle></el-button>
+            <div>
+                <el-button @click="dialogVisible = true" icon="el-icon-plus" circle></el-button>
+            </div>
+            <br />
+            <div>
+                <el-button @click="dialogVisible = true" icon="el-icon-upload" circle></el-button>
+            </div>
         </div>
 
         <el-dialog
-            title="Nuevo proyecto"
+            title="Nueva unidad"
             :visible.sync="dialogVisible"
             width="90%"
             style="margin-top: 15vh;"
         >
             <div>
-                <label for="new_project_name" class="input-label">Nombre del proyecto</label>
+                <label for="new_project_name" class="input-label">Nombre de la unidad</label>
                 <el-input v-model="new_project_name" id="new_project_name"/>
             </div>
             <span slot="footer" class="dialog-footer">
@@ -89,15 +102,18 @@ export default {
     }
 }
 </script>
-<style scoped>
+<style>
 .float {
 	position: fixed;
 	bottom: 80px;
 	right: 20px;
 }
 .float .el-button {
-    border-color: #2ECC74;
+    border-color: #2C39A994;
     border-width: 3px;
-    color: #2ECC74;
+    color: #2C39A994;
+}
+.blue-card .el-card__body  {
+    background-color: #2C39A994;
 }
 </style>
