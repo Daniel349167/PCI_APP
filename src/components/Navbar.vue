@@ -13,7 +13,7 @@
             background-color: white;
         ">
             <el-col :span="6">
-                <div @click="goto('home')">
+                <div @click="goto('/home')">
                     <div>
                         <el-image :src="img.home" fit="contain" style="width: 10vw"/>
                     </div>
@@ -23,7 +23,7 @@
                 </div>
             </el-col>
             <el-col :span="6">
-                <div @click="goto('projects')">
+                <div @click="goto('/projects')">
                     <div>
                         <el-image :src="img.folder" fit="contain" style="width: 10vw"/>
                     </div>
@@ -33,7 +33,7 @@
                 </div>
             </el-col>
             <el-col :span="6">
-                <div @click="goto('results')">
+                <div @click="goto('/results')">
                     <div>
                         <el-image :src="img.chart" fit="contain" style="width: 10vw"/>
                     </div>
@@ -72,9 +72,9 @@ export default {
   methods: {
     goto(route) {
         switch(route) {
-        case 'home':
-        case 'projects':
-        case 'support':
+        case '/home':
+        case '/projects':
+        case '/support':
             this.$router.push(route);
         }
     }

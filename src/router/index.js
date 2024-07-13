@@ -6,6 +6,8 @@ import Signup from '@/views/Signup'
 import Home from '@/views/Home'
 import Projects from '@/views/Projects'
 import Support from '@/views/Support'
+import Samples from '@/views/Samples'
+import Surveys from '@/views/Surveys'
 
 Vue.use(Router)
 
@@ -40,6 +42,16 @@ export default new Router({
       path: '/support',
       name: 'Support',
       component: Support
+    },
+    {
+      path: '/projects/:sample',
+      name: 'Samples',
+      component: Samples
+    },
+    {
+      path: '/projects/:sample/:survey',
+      name: 'Surveys',
+      component: Surveys
     }
   ]
 })
