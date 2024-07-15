@@ -3,19 +3,35 @@
 		<div class="page-title">
 			HOJA DE RELEVAMIENTO
 		</div>
+		<div class="page-title">
+			UM {{ $route.params.sample }}
+		</div>
+        <el-row>
+            <el-col :span="12">
+                Del:
+            </el-col>
+            <el-col :span="12">
+                Al:
+            </el-col>
+        </el-row>
+        <el-row>
+            Sección:
+        </el-row>
         <div v-if="loading" v-loading="true" style="height: 160px" />
-        <div v-for="(project, index) in projects" :key="index" style="margin: 20px 0px" class="blue-card">
+        <div v-for="survey in surveys" :key="survey.id" style="margin: 20px 0px" class="blue-card"
+            @click="goto('/surveys/'+survey.id)"
+        >
             <el-card>
                 <el-row>
                     <el-col :span="8">
-                        <el-image :src="project.image" fit="contain"/>
+                        <el-image :src="survey.image" fit="contain"/>
                     </el-col>
                     <el-col :span="16" style="text-align: left; padding: 0px 20px">
                         <div>
-                            UM 
+                            Daño {{ survey.number }}
                         </div>
                         <div style="color: white; font-size: 12px;">
-                            {{ project.time }}
+                            {{ survey.time }}
                         </div>
                     </el-col>
                 </el-row>
@@ -23,70 +39,75 @@
         </div>
         <div class="float">
             <div>
-                <el-button @click="dialogVisible = true" icon="el-icon-plus" circle></el-button>
+                <el-button @click="createSurvey()" icon="el-icon-plus" circle></el-button>
             </div>
         </div>
-
-        <el-dialog
-            title="Nueva hoja"
-            :visible.sync="dialogVisible"
-            width="90%"
-            style="margin-top: 15vh;"
-        >
-            <div>
-                <label for="new_project_name" class="input-label">Nombre de la hoja</label>
-                <el-input v-model="new_project_name" id="new_project_name"/>
-            </div>
-            <span slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="dialogVisible = false">Confirm</el-button>
-                <el-button @click="dialogVisible = false">Cancel</el-button>
-            </span>
-        </el-dialog>
-
 		<Navbar/>
     </div>
 </template>
 <script>
 import Navbar from '../components/Navbar.vue';
 import { auth } from "../assets/mixins/auth.js"; 
+import Moment from 'moment';
 export default {
     components: {
-    Navbar
+        Navbar
     },
     mixins: [auth],	
     data() {
         return {
             logo: require('../assets/images/logo.png'),
             image_not_found: require('../assets/images/not_found.png'),
-            projects: [],
-            loading: true,
-            dialogVisible: false,
-            new_project_name: ''
+            surveys: [],
+            loading: true
         }
     },
     mounted() {
-        console.log('Projects');
-
-        fetch(this.authBaseUrl()+'/api/projects', {
-            method: 'GET',
-            headers: this.authHeaders()
-        })
-            .then(resp => resp.json()) 
-            .then(data => {
-                console.dir(data);
-                this.loading = false;
-                for(var project of data) {
-                    this.projects.push({
-                        image: project.image ? project.image : this.image_not_found,
-                        name: project.name,
-                        time: `${project.time.substr(0,10)} ${project.time.substr(11,8)}`
-                    });
-                }
-            }); 
+        console.log('Surveys');
+        this.loadSurveys();
     },
     methods: {
         goto(route) {
             this.$router.push(route);
+        },
+        loadSurveys() {
+            this.surveys = [];
+            fetch(this.authBaseUrl()+'/api/surveys/' + this.$route.params.sample, {
+                method: 'GET',
+                headers: this.authHeaders()
+            })
+                .then(resp => resp.json()) 
+                .then(data => {
+                    console.dir(data);
+                    this.loading = false;
+                    for(var survey of data) {
+                        this.surveys.push({
+                            id: survey.id,
+                            image: survey.image ? survey.image : this.image_not_found,
+                            number: survey.number,
+                            time: `${survey.time.substr(0,10)} ${survey.time.substr(11,8)}`
+                        });
+                    }
+                }); 
+        },
+        createSurvey() {
+            fetch(this.authBaseUrl()+'/api/surveys/' + this.$route.params.survey, {
+                method: 'POST',
+                headers: this.authHeaders(),
+                body: JSON.stringify({
+                    'number': this.surveys.length+1,
+                    'time': Moment().format("YYYY-MM-DD hh:mm:ss")
+                })
+            })
+                .then(resp => {
+                    if(resp.status == 200) {
+                        alert("Unidad de muestra creada");
+                        this.dialogVisible = false;
+                        this.loadSurveys();
+                    } else {
+                        alert("Error al crear unidad de muestra");
+                    }
+                }) 
         }
     }
 }

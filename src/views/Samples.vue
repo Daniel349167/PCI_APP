@@ -4,11 +4,11 @@
 			UNIDAD DE MUESTRA
 		</div>
 		<div class="page-title">
-			Proyecto {{ $route.params.sample }}
+			Proyecto {{ $route.params.project }}
 		</div>
         <div v-if="loading" v-loading="true" style="height: 160px" />
-        <div v-for="(sample, index) in samples" :key="index" style="margin: 20px 0px" class="blue-card"
-            @click="goto('/projects/'+$route.params.sample+'/'+(index+1))"
+        <div v-for="sample in samples" :key="sample.id" style="margin: 20px 0px" class="blue-card"
+            @click="goto('/samples/'+sample.id)"
         >
             <el-card>
                 <el-row>
@@ -46,7 +46,7 @@ import { auth } from "../assets/mixins/auth.js";
 import Moment from 'moment';
 export default {
     components: {
-    Navbar
+        Navbar
     },
     mixins: [auth],	
     data() {
@@ -54,8 +54,7 @@ export default {
             logo: require('../assets/images/logo.png'),
             image_not_found: require('../assets/images/not_found.png'),
             samples: [],
-            loading: true,
-            dialogVisible: false
+            loading: true
         }
     },
     mounted() {
@@ -64,11 +63,11 @@ export default {
     },
     methods: {
         goto(route) {
-            this.$router.pus,h(route);
+            this.$router.push(route);
         },
         loadSamples() {
             this.samples = [];
-            fetch(this.authBaseUrl()+'/api/samples/' + this.$route.params.sample, {
+            fetch(this.authBaseUrl()+'/api/samples/' + this.$route.params.project, {
                 method: 'GET',
                 headers: this.authHeaders()
             })
@@ -78,6 +77,7 @@ export default {
                     this.loading = false;
                     for(var sample of data) {
                         this.samples.push({
+                            id: sample.id,
                             image: sample.image ? sample.image : this.image_not_found,
                             number: sample.number,
                             time: `${sample.time.substr(0,10)} ${sample.time.substr(11,8)}`

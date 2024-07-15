@@ -9,6 +9,7 @@ import Results from '@/views/Results'
 import Support from '@/views/Support'
 import Samples from '@/views/Samples'
 import Surveys from '@/views/Surveys'
+import Sheet from '@/views/Sheet'
 
 Vue.use(Router)
 
@@ -50,14 +51,19 @@ export default new Router({
       component: Support
     },
     {
-      path: '/projects/:sample',
+      path: '/projects/:project',
       name: 'Samples',
       component: Samples
     },
     {
-      path: '/projects/:sample/:survey',
+      path: '/samples/:sample',
       name: 'Surveys',
       component: Surveys
+    },
+    {
+      path: '/surveys/:survey',
+      name: 'Sheet',
+      component: Sheet
     }
   ]
 })
