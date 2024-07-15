@@ -74,6 +74,7 @@ export default {
         switch(route) {
         case '/home':
         case '/projects':
+        case '/results':
         case '/support':
             this.$router.push(route);
         }

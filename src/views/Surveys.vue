@@ -4,24 +4,22 @@
 			HOJA DE RELEVAMIENTO
 		</div>
         <div v-if="loading" v-loading="true" style="height: 160px" />
-		<div style="width: calc(100% - 60px);">
-            <div v-for="(project, index) in projects" :key="index" style="margin: 20px 0px" class="blue-card">
-                <el-card>
-                    <el-row>
-                        <el-col :span="8">
-                            <el-image :src="project.image" fit="contain"/>
-                        </el-col>
-                        <el-col :span="16" style="text-align: left; padding: 0px 20px">
-                            <div>
-                                UM 
-                            </div>
-                            <div style="color: white; font-size: 12px;">
-                                {{ project.time }}
-                            </div>
-                        </el-col>
-                    </el-row>
-                </el-card>
-            </div>
+        <div v-for="(project, index) in projects" :key="index" style="margin: 20px 0px" class="blue-card">
+            <el-card>
+                <el-row>
+                    <el-col :span="8">
+                        <el-image :src="project.image" fit="contain"/>
+                    </el-col>
+                    <el-col :span="16" style="text-align: left; padding: 0px 20px">
+                        <div>
+                            UM 
+                        </div>
+                        <div style="color: white; font-size: 12px;">
+                            {{ project.time }}
+                        </div>
+                    </el-col>
+                </el-row>
+            </el-card>
         </div>
         <div class="float">
             <div>
@@ -59,7 +57,7 @@ export default {
     data() {
         return {
             logo: require('../assets/images/logo.png'),
-            image_not_found: 'https://i0.wp.com/sunrisedaycamp.org/wp-content/uploads/2020/10/placeholder.png',
+            image_not_found: require('../assets/images/not_found.png'),
             projects: [],
             loading: true,
             dialogVisible: false,

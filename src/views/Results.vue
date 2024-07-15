@@ -1,10 +1,10 @@
 <template>
     <div style="width: 90vw; margin: auto">
 		<div class="page-title">
-			PROYECTOS
+			RESULTADOS
 		</div>
         <div v-if="loading" v-loading="true" style="height: 160px" />
-		<div v-for="(project, index) in projects" :key="index" style="margin: 20px 0px" @click="goto('/projects/'+(index+1))">
+		<div v-for="(project, index) in projects" :key="index" style="margin: 20px 0px">
 			<el-card>
 				<el-row>
 					<el-col :span="8">
@@ -21,25 +21,6 @@
 				</el-row>
 			</el-card>
 		</div>
-        <div class="float">
-            <el-button @click="dialogVisible = true" icon="el-icon-plus" circle></el-button>
-        </div>
-
-        <el-dialog
-            title="Nuevo proyecto"
-            :visible.sync="dialogVisible"
-            width="90%"
-            style="margin-top: 15vh;"
-        >
-            <div>
-                <label for="new_project_name" class="input-label">Nombre del proyecto</label>
-                <el-input v-model="new_project_name" id="new_project_name"/>
-            </div>
-            <span slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="createProject()">Confirm</el-button>
-                <el-button @click="dialogVisible = false">Cancel</el-button>
-            </span>
-        </el-dialog>
 
 		<Navbar/>
     </div>
@@ -68,11 +49,7 @@ export default {
         this.loadProjects()
     },
     methods: {
-        goto(route) {
-            this.$router.push(route);
-        },
         loadProjects() {
-            this.projects = [];
             fetch(this.authBaseUrl()+'/api/projects', {
                 method: 'GET',
                 headers: this.authHeaders()
@@ -89,25 +66,6 @@ export default {
                         });
                     }
                 }); 
-        },
-        createProject() {
-            fetch(this.authBaseUrl()+'/api/projects', {
-                method: 'POST',
-                headers: this.authHeaders(),
-                body: JSON.stringify({
-                    'name': this.new_project_name,
-                    'time': Moment().format("YYYY-MM-DD hh:mm:ss")
-                })
-            })
-                .then(resp => {
-                    if(resp.status == 200) {
-                        alert("Proyecto creado");
-                        this.dialogVisible = false;
-                        this.loadProjects();
-                    } else {
-                        alert("Error al crear proyecto");
-                    }
-                }) 
         }
     }
 }

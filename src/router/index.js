@@ -5,6 +5,7 @@ import Login from '@/views/Login'
 import Signup from '@/views/Signup'
 import Home from '@/views/Home'
 import Projects from '@/views/Projects'
+import Results from '@/views/Results'
 import Support from '@/views/Support'
 import Samples from '@/views/Samples'
 import Surveys from '@/views/Surveys'
@@ -37,6 +38,11 @@ export default new Router({
       path: '/projects',
       name: 'Projects',
       component: Projects
+    },
+    {
+      path: '/results',
+      name: 'Results',
+      component: Results
     },
     {
       path: '/support',

@@ -7,52 +7,35 @@
 			Proyecto {{ $route.params.sample }}
 		</div>
         <div v-if="loading" v-loading="true" style="height: 160px" />
-		<div style="width: calc(100% - 60px);">
-            <div v-for="(project, index) in projects" :key="index" style="margin: 20px 0px" class="blue-card"
-                @click="goto('/projects/'+$route.params.sample+'/'+(index+1))"
-            >
-                <el-card>
-                    <el-row>
-                        <el-col :span="8">
-                            <el-image :src="project.image" fit="contain"/>
-                        </el-col>
-                        <el-col :span="16" style="text-align: left; padding: 0px 20px">
-                            <div>
-                                UM 
-                            </div>
-                            <div style="color: white; font-size: 12px;">
-                                {{ project.time }}
-                            </div>
-                        </el-col>
-                    </el-row>
-                </el-card>
-            </div>
+        <div v-for="(sample, index) in samples" :key="index" style="margin: 20px 0px" class="blue-card"
+            @click="goto('/projects/'+$route.params.sample+'/'+(index+1))"
+        >
+            <el-card>
+                <el-row>
+                    <el-col :span="8">
+                        <el-image :src="sample.image" fit="contain"/>
+                    </el-col>
+                    <el-col :span="16" style="text-align: left; padding: 0px 20px">
+                        <div>
+                            UM {{ sample.number }}
+                        </div>
+                        <div style="color: white; font-size: 12px;">
+                            {{ sample.time }}
+                        </div>
+                    </el-col>
+                </el-row>
+            </el-card>
         </div>
         <div class="float">
             <div>
-                <el-button @click="dialogVisible = true" icon="el-icon-plus" circle></el-button>
+                <el-button @click="createSample()" icon="el-icon-plus" circle></el-button>
             </div>
-            <br />
+            <div style="height: 10px;" />
+            <!-- TODO Botón de actualizar-->
             <div>
-                <el-button @click="dialogVisible = true" icon="el-icon-upload" circle></el-button>
+                <el-button @click="loadSamples()" icon="el-icon-refresh" circle></el-button>
             </div>
         </div>
-
-        <el-dialog
-            title="Nueva unidad"
-            :visible.sync="dialogVisible"
-            width="90%"
-            style="margin-top: 15vh;"
-        >
-            <div>
-                <label for="new_project_name" class="input-label">Nombre de la unidad</label>
-                <el-input v-model="new_project_name" id="new_project_name"/>
-            </div>
-            <span slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="dialogVisible = false">Confirm</el-button>
-                <el-button @click="dialogVisible = false">Cancel</el-button>
-            </span>
-        </el-dialog>
 
 		<Navbar/>
     </div>
@@ -60,6 +43,7 @@
 <script>
 import Navbar from '../components/Navbar.vue';
 import { auth } from "../assets/mixins/auth.js"; 
+import Moment from 'moment';
 export default {
     components: {
     Navbar
@@ -68,36 +52,57 @@ export default {
     data() {
         return {
             logo: require('../assets/images/logo.png'),
-            image_not_found: 'https://i0.wp.com/sunrisedaycamp.org/wp-content/uploads/2020/10/placeholder.png',
-            projects: [],
+            image_not_found: require('../assets/images/not_found.png'),
+            samples: [],
             loading: true,
-            dialogVisible: false,
-            new_project_name: ''
+            dialogVisible: false
         }
     },
     mounted() {
-        console.log('Projects');
-
-        fetch(this.authBaseUrl()+'/api/projects', {
-            method: 'GET',
-            headers: this.authHeaders()
-        })
-            .then(resp => resp.json()) 
-            .then(data => {
-                console.dir(data);
-                this.loading = false;
-                for(var project of data) {
-                    this.projects.push({
-                        image: project.image ? project.image : this.image_not_found,
-                        name: project.name,
-                        time: `${project.time.substr(0,10)} ${project.time.substr(11,8)}`
-                    });
-                }
-            }); 
+        console.log('Samples');
+        this.loadSamples();
     },
     methods: {
         goto(route) {
-            this.$router.push(route);
+            this.$router.pus,h(route);
+        },
+        loadSamples() {
+            this.samples = [];
+            fetch(this.authBaseUrl()+'/api/samples/' + this.$route.params.sample, {
+                method: 'GET',
+                headers: this.authHeaders()
+            })
+                .then(resp => resp.json()) 
+                .then(data => {
+                    console.dir(data);
+                    this.loading = false;
+                    for(var sample of data) {
+                        this.samples.push({
+                            image: sample.image ? sample.image : this.image_not_found,
+                            number: sample.number,
+                            time: `${sample.time.substr(0,10)} ${sample.time.substr(11,8)}`
+                        });
+                    }
+                }); 
+        },
+        createSample() {
+            fetch(this.authBaseUrl()+'/api/samples/' + this.$route.params.sample, {
+                method: 'POST',
+                headers: this.authHeaders(),
+                body: JSON.stringify({
+                    'number': this.samples.length+1,
+                    'time': Moment().format("YYYY-MM-DD hh:mm:ss")
+                })
+            })
+                .then(resp => {
+                    if(resp.status == 200) {
+                        alert("Unidad de muestra creada");
+                        this.dialogVisible = false;
+                        this.loadSamples();
+                    } else {
+                        alert("Error al crear unidad de muestra");
+                    }
+                }) 
         }
     }
 }
