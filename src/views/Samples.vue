@@ -31,7 +31,6 @@
                 <el-button @click="createSample()" icon="el-icon-plus" circle></el-button>
             </div>
             <div style="height: 10px;" />
-            <!-- TODO Botón de actualizar-->
             <div>
                 <el-button @click="loadSamples()" icon="el-icon-refresh" circle></el-button>
             </div>
@@ -86,7 +85,7 @@ export default {
                 }); 
         },
         createSample() {
-            fetch(this.authBaseUrl()+'/api/samples/' + this.$route.params.sample, {
+            fetch(this.authBaseUrl()+'/api/samples/' + this.$route.params.project, {
                 method: 'POST',
                 headers: this.authHeaders(),
                 body: JSON.stringify({

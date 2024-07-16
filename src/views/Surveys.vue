@@ -6,17 +6,21 @@
 		<div class="page-title">
 			UM {{ $route.params.sample }}
 		</div>
-        <el-row>
-            <el-col :span="12">
-                Del:
-            </el-col>
-            <el-col :span="12">
-                Al:
-            </el-col>
-        </el-row>
-        <el-row>
-            Sección:
-        </el-row>
+        <div style="height: 20px" />
+        <el-form ref="form" :model="form" label-width="90px" size="mini">
+            <el-form-item label="Del:">
+                <el-input v-model="form.type" type="number"></el-input>
+            </el-form-item>
+            <el-form-item label="Al:">
+                <el-input v-model="form.amount" type="number"></el-input>
+            </el-form-item>
+            <el-form-item label="Sección:">
+                <el-radio-group v-model="form.severity">
+                    <el-radio-button label="Izquierda" ></el-radio-button>
+                    <el-radio-button label="Derecha" ></el-radio-button>
+                </el-radio-group>
+            </el-form-item>
+        </el-form>
         <div v-if="loading" v-loading="true" style="height: 160px" />
         <div v-for="survey in surveys" :key="survey.id" style="margin: 20px 0px" class="blue-card"
             @click="goto('/surveys/'+survey.id)"
@@ -41,6 +45,10 @@
             <div>
                 <el-button @click="createSurvey()" icon="el-icon-plus" circle></el-button>
             </div>
+            <div style="height: 10px;" />
+            <div>
+                <el-button @click="" icon="el-icon-files" circle></el-button>
+            </div>
         </div>
 		<Navbar/>
     </div>
@@ -59,7 +67,8 @@ export default {
             logo: require('../assets/images/logo.png'),
             image_not_found: require('../assets/images/not_found.png'),
             surveys: [],
-            loading: true
+            loading: true,
+            form: {}
         }
     },
     mounted() {
@@ -91,7 +100,7 @@ export default {
                 }); 
         },
         createSurvey() {
-            fetch(this.authBaseUrl()+'/api/surveys/' + this.$route.params.survey, {
+            fetch(this.authBaseUrl()+'/api/surveys/' + this.$route.params.sample, {
                 method: 'POST',
                 headers: this.authHeaders(),
                 body: JSON.stringify({
@@ -101,11 +110,11 @@ export default {
             })
                 .then(resp => {
                     if(resp.status == 200) {
-                        alert("Unidad de muestra creada");
+                        alert("Hoja creada");
                         this.dialogVisible = false;
                         this.loadSurveys();
                     } else {
-                        alert("Error al crear unidad de muestra");
+                        alert("Error al crear hoja");
                     }
                 }) 
         }

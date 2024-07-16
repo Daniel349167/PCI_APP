@@ -4,7 +4,7 @@
 			RESULTADOS
 		</div>
         <div v-if="loading" v-loading="true" style="height: 160px" />
-		<div v-for="(project, index) in projects" :key="index" style="margin: 20px 0px">
+		<div v-for="(project, index) in projects" :key="index" style="margin: 20px 0px" class="project-results">
 			<el-card>
 				<el-row>
 					<el-col :span="8">
@@ -28,7 +28,6 @@
 <script>
 import Navbar from '../components/Navbar.vue';
 import { auth } from "../assets/mixins/auth.js"; 
-import Moment from 'moment';
 export default {
     components: {
     Navbar
@@ -70,15 +69,8 @@ export default {
     }
 }
 </script>
-<style scoped>
-.float {
-	position: fixed;
-	bottom: 80px;
-	right: 20px;
-}
-.float .el-button {
-    border-color: #2ECC74;
-    border-width: 3px;
-    color: #2ECC74;
+<style>
+.project-results .el-card__body {
+    padding: 10px 20px;
 }
 </style>
