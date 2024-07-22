@@ -19,9 +19,10 @@
                 <el-input v-model="form.amount" type="number"></el-input>
             </el-form-item>
         </el-form>
+        <img :src="image_url" alt="" />
         <el-row style="position: fixed; bottom: 80px; left: 0; width: 100%;">
             <el-col :span="12">
-                <el-button icon="el-icon-camera"></el-button>
+                <el-button icon="el-icon-camera" @click="camera()"></el-button>
             </el-col>
             <el-col :span="12">
                 <el-button icon="el-icon-files"></el-button>
@@ -44,19 +45,30 @@ export default {
         return {
             form: {
                 type: null
-            }
+            },
+            image_url: '',
+            image: null
         }
+    },
+    created() {
+        console.log('created');
+        document.addEventListener("deviceready", function() {
+            console.log('navigator');
+            console.dir(navigator);
+        }, false);
     },
     methods: {
         camera() {
             if(!window.navigator)
                 return;
+            console.log('navigator');
+            console.dir(navigator);
             const self = this;
             navigator.camera.getPicture(
                 async function(event) { 
                     console.log('getPicture');
-                    self.form.image_url = 'data:image/jpg;base64,' + event;
-                    await fetch(self.form.image_url)
+                    self.image_url = 'data:image/jpg;base64,' + event;
+                    await fetch(self.image_url)
                         .then(response => response.blob())
                         .then(blob => {
                             const fd = new FormData();
