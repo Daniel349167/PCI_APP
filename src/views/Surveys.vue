@@ -47,7 +47,7 @@
             </div>
             <div style="height: 10px;" />
             <div>
-                <el-button @click="" icon="el-icon-files" circle></el-button>
+                <el-button @click="''" icon="el-icon-files" circle></el-button>
             </div>
         </div>
 		<Navbar/>
@@ -64,7 +64,6 @@ export default {
     mixins: [auth],	
     data() {
         return {
-            logo: require('../assets/images/logo.png'),
             image_not_found: require('../assets/images/not_found.png'),
             surveys: [],
             loading: true,

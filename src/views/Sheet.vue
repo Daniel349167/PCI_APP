@@ -19,7 +19,7 @@
                 <el-input v-model="form.amount" type="number"></el-input>
             </el-form-item>
         </el-form>
-        <img :src="image_url" alt="" />
+        <el-image :src="image_url" fit="contain"/>
         <el-row style="position: fixed; bottom: 80px; left: 0; width: 100%;">
             <el-col :span="12">
                 <el-button icon="el-icon-camera" @click="camera()"></el-button>

@@ -6,10 +6,13 @@ import Signup from '@/views/Signup'
 import Home from '@/views/Home'
 import Projects from '@/views/Projects'
 import Results from '@/views/Results'
+import Result from '@/views/Result'
 import Support from '@/views/Support'
 import Samples from '@/views/Samples'
 import Surveys from '@/views/Surveys'
 import Sheet from '@/views/Sheet'
+import DamageLists from '@/views/DamageLists'
+import DamageList from '@/views/DamageList'
 
 Vue.use(Router)
 
@@ -64,6 +67,21 @@ export default new Router({
       path: '/surveys/:survey',
       name: 'Sheet',
       component: Sheet
+    },
+    {
+      path: '/results/:result',
+      name: 'Result',
+      component: Result
+    },
+    {
+      path: '/damagelists/:project',
+      name: 'DamageLists',
+      component: DamageLists
+    },
+    {
+      path: '/damagelist/:sample',
+      name: 'DamageList',
+      component: DamageList
     }
   ]
 })

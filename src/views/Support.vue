@@ -53,7 +53,6 @@ export default {
   },
   data() {
     return {
-	  logo: require('../assets/images/logo.png'),
         codes: [
             ['Grieta piel de cocodrilo', 'm²'],
             ['Exudación de asfalto', 'm²'],

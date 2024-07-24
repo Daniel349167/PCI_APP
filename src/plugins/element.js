@@ -3,7 +3,8 @@ import {
     Button, Input, Image, Card,
     Row, Col, Loading, Dialog,
     Form, FormItem,
-    Radio, RadioButton, RadioGroup
+    Radio, RadioButton, RadioGroup,
+    Table, TableColumn
 } from 'element-ui'
 import lang from 'element-ui/lib/locale/lang/es'
 import locale from 'element-ui/lib/locale'
@@ -24,3 +25,5 @@ Vue.use(FormItem)
 Vue.use(Radio)
 Vue.use(RadioButton)
 Vue.use(RadioGroup)
+Vue.use(Table)
+Vue.use(TableColumn)

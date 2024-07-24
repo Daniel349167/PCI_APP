@@ -4,7 +4,10 @@
 			RESULTADOS
 		</div>
         <div v-if="loading" v-loading="true" style="height: 160px" />
-		<div v-for="(project, index) in projects" :key="index" style="margin: 20px 0px" class="project-results">
+		<div v-for="project in projects" :key="project.id" style="margin: 20px 0px"
+            class="project-results"
+            @click="goto('/results/'+project.id)"
+        >
 			<el-card>
 				<el-row>
 					<el-col :span="8">
@@ -35,7 +38,6 @@ export default {
     mixins: [auth],	
     data() {
         return {
-            logo: require('../assets/images/logo.png'),
             image_not_found: require('../assets/images/not_found.png'),
             projects: [],
             loading: true,
@@ -48,7 +50,11 @@ export default {
         this.loadProjects()
     },
     methods: {
+        goto(route) {
+            this.$router.push(route);
+        },
         loadProjects() {
+            this.projects = [];
             fetch(this.authBaseUrl()+'/api/projects', {
                 method: 'GET',
                 headers: this.authHeaders()
@@ -59,6 +65,7 @@ export default {
                     this.loading = false;
                     for(var project of data) {
                         this.projects.push({
+                            id: project.id,
                             image: project.image ? project.image : this.image_not_found,
                             name: project.name,
                             time: `${project.time.substr(0,10)} ${project.time.substr(11,8)}`

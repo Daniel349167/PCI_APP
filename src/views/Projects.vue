@@ -57,7 +57,6 @@ export default {
     mixins: [auth],	
     data() {
         return {
-            logo: require('../assets/images/logo.png'),
             image_not_found: require('../assets/images/not_found.png'),
             projects: [],
             loading: true,

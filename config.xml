@@ -26,4 +26,5 @@
             <application android:usesCleartextTraffic="true" />
         </edit-config>
     </platform>
+    <allow-navigation href="*"/>
 </widget>
