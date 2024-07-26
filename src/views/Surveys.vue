@@ -9,13 +9,13 @@
         <div style="height: 20px" />
         <el-form ref="form" :model="form" label-width="90px" size="mini">
             <el-form-item label="Del:">
-                <el-input v-model="form.type" type="number"></el-input>
+                <el-input v-model="form.from" type="text"></el-input>
             </el-form-item>
             <el-form-item label="Al:">
-                <el-input v-model="form.amount" type="number"></el-input>
+                <el-input v-model="form.to" type="text"></el-input>
             </el-form-item>
             <el-form-item label="Sección:">
-                <el-radio-group v-model="form.severity">
+                <el-radio-group v-model="form.section">
                     <el-radio-button label="Izquierda" ></el-radio-button>
                     <el-radio-button label="Derecha" ></el-radio-button>
                 </el-radio-group>
@@ -73,6 +73,7 @@ export default {
     mounted() {
         console.log('Surveys');
         this.loadSurveys();
+        this.loadSample();
     },
     methods: {
         goto(route) {
@@ -97,6 +98,13 @@ export default {
                         });
                     }
                 }); 
+        },
+        loadSample() {
+            this.form = {
+                from: '40km+30m',
+                to: '40km+30m',
+                section: 'Derecha'
+            }
         },
         createSurvey() {
             fetch(this.authBaseUrl()+'/api/surveys/' + this.$route.params.sample, {

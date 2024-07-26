@@ -50,12 +50,8 @@ export default {
             image: null
         }
     },
-    created() {
-        console.log('created');
-        document.addEventListener("deviceready", function() {
-            console.log('navigator');
-            console.dir(navigator);
-        }, false);
+    mounted() {
+        this.loadSurvey()
     },
     methods: {
         camera() {
@@ -90,6 +86,13 @@ export default {
                     targetHeight: 600
                 }
             )
+        },
+        loadSurvey() {
+            this.form = {
+                type: 1,
+                severity: 'M',
+                amount: 1
+            }
         }
     }
 }

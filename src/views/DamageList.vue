@@ -10,7 +10,7 @@
                     Proyecto:
                 </td>
                 <td style="text-align: left">
-                    Proyecto 1
+                    {{form.project}}
                 </td>
             </tr>
             <tr>
@@ -18,7 +18,7 @@
                     UM:
                 </td>
                 <td style="text-align: left">
-                    UM 1
+                    UM {{form.sample}}
                 </td>
             </tr>
             <tr>
@@ -26,7 +26,7 @@
                     Del:
                 </td>
                 <td style="text-align: left">
-                    _
+                    {{form.from}}
                 </td>
             </tr>
             <tr>
@@ -34,7 +34,7 @@
                     Al:
                 </td>
                 <td style="text-align: left">
-                    _
+                    {{form.to}}
                 </td>
             </tr>
         </table>
@@ -76,33 +76,43 @@ export default {
         return {
             image_not_found: require('../assets/images/not_found.png'),
             loading: true,
-            surveys: []
+            surveys: [],
+            form: {}
         }
     },
     mounted() {
         console.log('DamageList');
+        this.loadSample();
         this.loadSurveys();
     },
     methods: {
         
-    loadSurveys() {
-        this.surveys = [];
-        fetch(this.authBaseUrl()+'/api/surveys/' + this.$route.params.sample, {
-            method: 'GET',
-            headers: this.authHeaders()
-        })
-            .then(resp => resp.json()) 
-            .then(data => {
-                console.dir(data);
-                this.loading = false;
-                for(var survey of data) {
-                    this.surveys.push({
-                        damage: survey.number,
-                        severity: 'L',
-                        ammount: 1
-                    });
-                }
-            }); 
+        loadSurveys() {
+            this.surveys = [];
+            fetch(this.authBaseUrl()+'/api/surveys/' + this.$route.params.sample, {
+                method: 'GET',
+                headers: this.authHeaders()
+            })
+                .then(resp => resp.json()) 
+                .then(data => {
+                    console.dir(data);
+                    this.loading = false;
+                    for(var survey of data) {
+                        this.surveys.push({
+                            damage: survey.number,
+                            severity: 'L',
+                            ammount: 1
+                        });
+                    }
+                }); 
+        },
+        loadSample() {
+            this.form = {
+                project: 'Proyecto 1',
+                sample: 1,
+                from: '40km+30m',
+                to: '40km+30m'
+            }
         }
     }
 }
