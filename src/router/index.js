@@ -9,7 +9,7 @@ import Results from '@/views/Results'
 import Result from '@/views/Result'
 import Support from '@/views/Support'
 import Samples from '@/views/Samples'
-import Surveys from '@/views/Surveys'
+import Damages from '@/views/Damages'
 import Sheet from '@/views/Sheet'
 import DamageLists from '@/views/DamageLists'
 import DamageList from '@/views/DamageList'
@@ -60,11 +60,11 @@ export default new Router({
     },
     {
       path: '/samples/:sample',
-      name: 'Surveys',
-      component: Surveys
+      name: 'Damages',
+      component: Damages
     },
     {
-      path: '/surveys/:survey',
+      path: '/damages/:damage',
       name: 'Sheet',
       component: Sheet
     },

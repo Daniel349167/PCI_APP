@@ -42,7 +42,7 @@
         <el-image :src="image_not_found" fit="contain"/>
         <div style="height: 20px" />
         <el-table
-            :data="surveys"
+            :data="damages"
             border
             style="width: 100%">
             <el-table-column
@@ -76,20 +76,20 @@ export default {
         return {
             image_not_found: require('../assets/images/not_found.png'),
             loading: true,
-            surveys: [],
+            damages: [],
             form: {}
         }
     },
     mounted() {
         console.log('DamageList');
         this.loadSample();
-        this.loadSurveys();
+        this.loadDamages();
     },
     methods: {
         
-        loadSurveys() {
-            this.surveys = [];
-            fetch(this.authBaseUrl()+'/api/surveys/' + this.$route.params.sample, {
+        loadDamages() {
+            this.damages = [];
+            fetch(this.authBaseUrl()+'/api/damages/' + this.$route.params.sample, {
                 method: 'GET',
                 headers: this.authHeaders()
             })
@@ -97,9 +97,9 @@ export default {
                 .then(data => {
                     console.dir(data);
                     this.loading = false;
-                    for(var survey of data) {
-                        this.surveys.push({
-                            damage: survey.number,
+                    for(var damage of data) {
+                        this.damages.push({
+                            damage: damage.number,
                             severity: 'L',
                             ammount: 1
                         });

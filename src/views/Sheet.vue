@@ -1,7 +1,7 @@
 <template>
     <div style="width: 90vw; margin: auto">
 		<div class="page-title">
-			Daño {{ $route.params.survey }}
+			Daño {{ $route.params.damage }}
 		</div>
         <div style="height: 20px" />
         <el-form ref="form" :model="form" label-width="90px" size="small">
@@ -51,7 +51,7 @@ export default {
         }
     },
     mounted() {
-        this.loadSurvey()
+        this.loadDamage()
     },
     methods: {
         camera() {
@@ -87,7 +87,7 @@ export default {
                 }
             )
         },
-        loadSurvey() {
+        loadDamage() {
             this.form = {
                 type: 1,
                 severity: 'M',

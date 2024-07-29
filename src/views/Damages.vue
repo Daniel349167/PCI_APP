@@ -22,20 +22,20 @@
             </el-form-item>
         </el-form>
         <div v-if="loading" v-loading="true" style="height: 160px" />
-        <div v-for="survey in surveys" :key="survey.id" style="margin: 20px 0px" class="blue-card"
-            @click="goto('/surveys/'+survey.id)"
+        <div v-for="damage in damages" :key="damage.id" style="margin: 20px 0px" class="blue-card"
+            @click="goto('/damages/'+damage.id)"
         >
             <el-card>
                 <el-row>
                     <el-col :span="8">
-                        <el-image :src="survey.image" fit="contain"/>
+                        <el-image :src="damage.image" fit="contain"/>
                     </el-col>
                     <el-col :span="16" style="text-align: left; padding: 0px 20px">
                         <div>
-                            Daño {{ survey.number }}
+                            Daño {{ damage.number }}
                         </div>
                         <div style="color: white; font-size: 12px;">
-                            {{ survey.time }}
+                            {{ damage.time }}
                         </div>
                     </el-col>
                 </el-row>
@@ -43,7 +43,7 @@
         </div>
         <div class="float">
             <div>
-                <el-button @click="createSurvey()" icon="el-icon-plus" circle></el-button>
+                <el-button @click="createDamage()" icon="el-icon-plus" circle></el-button>
             </div>
             <div style="height: 10px;" />
             <div>
@@ -65,23 +65,23 @@ export default {
     data() {
         return {
             image_not_found: require('../assets/images/not_found.png'),
-            surveys: [],
+            damages: [],
             loading: true,
             form: {}
         }
     },
     mounted() {
-        console.log('Surveys');
-        this.loadSurveys();
+        console.log('damages');
+        this.loadDamages();
         this.loadSample();
     },
     methods: {
         goto(route) {
             this.$router.push(route);
         },
-        loadSurveys() {
-            this.surveys = [];
-            fetch(this.authBaseUrl()+'/api/surveys/' + this.$route.params.sample, {
+        loadDamages() {
+            this.damages = [];
+            fetch(this.authBaseUrl()+'/api/damages/' + this.$route.params.sample, {
                 method: 'GET',
                 headers: this.authHeaders()
             })
@@ -89,12 +89,12 @@ export default {
                 .then(data => {
                     console.dir(data);
                     this.loading = false;
-                    for(var survey of data) {
-                        this.surveys.push({
-                            id: survey.id,
-                            image: survey.image ? survey.image : this.image_not_found,
-                            number: survey.number,
-                            time: `${survey.time.substr(0,10)} ${survey.time.substr(11,8)}`
+                    for(var damage of data) {
+                        this.damages.push({
+                            id: damage.id,
+                            image: damage.image ? damage.image : this.image_not_found,
+                            number: damage.number,
+                            time: `${damage.time.substr(0,10)} ${damage.time.substr(11,8)}`
                         });
                     }
                 }); 
@@ -106,12 +106,12 @@ export default {
                 section: 'Derecha'
             }
         },
-        createSurvey() {
-            fetch(this.authBaseUrl()+'/api/surveys/' + this.$route.params.sample, {
+        createDamage() {
+            fetch(this.authBaseUrl()+'/api/damages/' + this.$route.params.sample, {
                 method: 'POST',
                 headers: this.authHeaders(),
                 body: JSON.stringify({
-                    'number': this.surveys.length+1,
+                    'number': this.damages.length+1,
                     'time': Moment().format("YYYY-MM-DD hh:mm:ss")
                 })
             })
@@ -119,7 +119,7 @@ export default {
                     if(resp.status == 200) {
                         alert("Hoja creada");
                         this.dialogVisible = false;
-                        this.loadSurveys();
+                        this.loaddamages();
                     } else {
                         alert("Error al crear hoja");
                     }
