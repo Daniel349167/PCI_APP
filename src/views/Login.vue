@@ -61,7 +61,13 @@ export default {
                         localStorage.api_token = data.token;
                         this.goto('home');
                     } else
-                        alert('Datos Incorrectos');
+                        this.$message({
+                            showClose: true,
+                            message: 'Datos incorrectos',
+                            type: 'error',
+                            center: true,
+                            customClass: 'message'
+                        });
                 }); 
         }
     }

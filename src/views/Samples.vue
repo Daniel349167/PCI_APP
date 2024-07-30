@@ -94,11 +94,24 @@ export default {
             })
                 .then(resp => {
                     if(resp.status == 200) {
-                        alert("Unidad de muestra creada");
+                        
+                        this.$message({
+                            showClose: true,
+                            message: 'Unidad de muestra creada',
+                            type: 'success',
+                            center: true,
+                            customClass: 'message'
+                        });
                         this.dialogVisible = false;
                         this.loadSamples();
                     } else {
-                        alert("Error al crear unidad de muestra");
+                        this.$message({
+                            showClose: true,
+                            message: 'Error al crear unidad de muestra',
+                            type: 'error',
+                            center: true,
+                            customClass: 'message'
+                        });
                     }
                 }) 
         }
@@ -115,6 +128,7 @@ export default {
     border-color: #2C39A994;
     border-width: 3px;
     color: #2C39A994;
+    font-size: 24px;
 }
 .blue-card .el-card__body  {
     background-color: #2C39A994;

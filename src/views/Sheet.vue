@@ -3,29 +3,35 @@
 		<div class="page-title">
 			Daño {{ $route.params.damage }}
 		</div>
-        <div style="height: 20px" />
-        <el-form ref="form" :model="form" label-width="90px" size="small">
-            <el-form-item label="Tipo (1-19)">
-                <el-input v-model="form.type" type="number"></el-input>
-            </el-form-item>
-            <el-form-item label="Severidad">
-                <el-radio-group v-model="form.severity">
-                    <el-radio-button label="L" ></el-radio-button>
-                    <el-radio-button label="M" ></el-radio-button>
-                    <el-radio-button label="H" ></el-radio-button>
-                </el-radio-group>
-            </el-form-item>
-            <el-form-item label="Cantidad">
-                <el-input v-model="form.amount" type="number"></el-input>
-            </el-form-item>
-        </el-form>
+        <div style="margin: 20px 0px" class="damage-sheet-form">
+            <el-row>
+                <el-col :span="10">
+                    <label for="type" class="input-label">Tipo</label>
+                    <el-input v-model="form.type" type="number" size="mini" id="type"/>
+                </el-col>
+                <el-col :span="10">
+                    <label for="amount" class="input-label">Cantidad</label>
+                    <el-input v-model="form.amount" type="number" size="mini" id="amount"/>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col>
+                    <label for="severity" class="input-label">Severidad</label>
+                    <el-radio-group v-model="form.severity" size="mini" id="severity">
+                        <el-radio-button label="L" ></el-radio-button>
+                        <el-radio-button label="M" ></el-radio-button>
+                        <el-radio-button label="H" ></el-radio-button>
+                    </el-radio-group>
+                </el-col>
+            </el-row>
+        </div>
         <el-image :src="image_url" fit="contain"/>
         <el-row style="position: fixed; bottom: 80px; left: 0; width: 100%;">
             <el-col :span="12">
-                <el-button icon="el-icon-camera" @click="camera()"></el-button>
+                <el-button icon="el-icon-camera-solid" @click="camera()" style="font-size: 24px"></el-button>
             </el-col>
             <el-col :span="12">
-                <el-button icon="el-icon-files"></el-button>
+                <el-button icon="el-icon-success" style="font-size: 24px"></el-button>
             </el-col>
         </el-row>
         <Navbar/>
@@ -97,3 +103,8 @@ export default {
     }
 }
 </script>
+<style>
+.damage-sheet-form .el-col {
+    margin: 10px
+}
+</style>

@@ -103,18 +103,30 @@ export default {
             })
                 .then(resp => {
                     if(resp.status == 200) {
-                        alert("Proyecto creado");
+                        this.$message({
+                            showClose: true,
+                            message: 'Proyecto creado',
+                            type: 'success',
+                            center: true,
+                            customClass: 'message'
+                        });
                         this.dialogVisible = false;
                         this.loadProjects();
                     } else {
-                        alert("Error al crear proyecto");
+                        this.$message({
+                            showClose: true,
+                            message: 'Error al crear proyecto"',
+                            type: 'error',
+                            center: true,
+                            customClass: 'message'
+                        });
                     }
                 }) 
         }
     }
 }
 </script>
-<style scoped>
+<style>
 .float {
 	position: fixed;
 	bottom: 80px;
@@ -124,5 +136,6 @@ export default {
     border-color: #2ECC74;
     border-width: 3px;
     color: #2ECC74;
+    font-size: 24px;
 }
 </style>

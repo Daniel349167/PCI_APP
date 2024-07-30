@@ -68,10 +68,22 @@ export default {
                 .then(data => {
                     if (data.status) {
                         localStorage.api_token = data.token;
-                        alert('Usuario creado');
+                        this.$message({
+                            showClose: true,
+                            message: 'Usuario creado',
+                            type: 'success',
+                            center: true,
+                            customClass: 'message'
+                        });
                         this.goto('login');
                     } else
-                        alert('Datos Incompatibles');
+                        this.$message({
+                            showClose: true,
+                            message: 'Datos incompatibles',
+                            type: 'error',
+                            center: true,
+                            customClass: 'message'
+                        });
                 }); 
         }
     }

@@ -28,3 +28,8 @@
 .el-card__body {
     background-color: #2ECC74;
 }
+
+.message {
+    min-width: 0px;
+    width: 90vw;
+}

@@ -7,12 +7,14 @@
 			UM {{ $route.params.sample }}
 		</div>
         <div style="height: 20px" />
-        <el-form ref="form" :model="form" label-width="90px" size="mini">
+        <el-form ref="form" :model="form" label-width="80px" size="mini">
             <el-form-item label="Del:">
-                <el-input v-model="form.from" type="text"></el-input>
+                <el-input v-model="form.fromkm" style="width: 50px;"></el-input> km + 
+                <el-input v-model="form.fromm" style="width: 50px;"></el-input> m
             </el-form-item>
             <el-form-item label="Al:">
-                <el-input v-model="form.to" type="text"></el-input>
+                <el-input v-model="form.tokm" style="width: 50px;"></el-input> km + 
+                <el-input v-model="form.tom" style="width: 50px;"></el-input> m
             </el-form-item>
             <el-form-item label="Sección:">
                 <el-radio-group v-model="form.section">
@@ -43,11 +45,11 @@
         </div>
         <div class="float">
             <div>
-                <el-button @click="createDamage()" icon="el-icon-plus" circle></el-button>
+                <el-button @click="''" icon="el-icon-check" circle></el-button>
             </div>
             <div style="height: 10px;" />
             <div>
-                <el-button @click="''" icon="el-icon-files" circle></el-button>
+                <el-button @click="createDamage()" icon="el-icon-plus" circle></el-button>
             </div>
         </div>
 		<Navbar/>
@@ -101,8 +103,10 @@ export default {
         },
         loadSample() {
             this.form = {
-                from: '40km+30m',
-                to: '40km+30m',
+                fromkm: 0,
+                fromm: 0,
+                tokm: 0,
+                tom: 0,
                 section: 'Derecha'
             }
         },
@@ -117,11 +121,23 @@ export default {
             })
                 .then(resp => {
                     if(resp.status == 200) {
-                        alert("Hoja creada");
+                        this.$message({
+                            showClose: true,
+                            message: 'Hoja creada',
+                            type: 'success',
+                            center: true,
+                            customClass: 'message'
+                        });
                         this.dialogVisible = false;
                         this.loaddamages();
                     } else {
-                        alert("Error al crear hoja");
+                        this.$message({
+                            showClose: true,
+                            message: 'Error al crear hoja',
+                            type: 'error',
+                            center: true,
+                            customClass: 'message'
+                        });
                     }
                 }) 
         }
@@ -138,6 +154,7 @@ export default {
     border-color: #2C39A994;
     border-width: 3px;
     color: #2C39A994;
+    font-size: 24px;
 }
 .blue-card .el-card__body  {
     background-color: #2C39A994;
