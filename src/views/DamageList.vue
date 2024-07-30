@@ -6,7 +6,7 @@
         <div style="height: 20px" />
         <table>
             <tr>
-                <td style="width: 20%; text-align: right;">
+                <td style="width: 100px; text-align: right;">
                     Proyecto:
                 </td>
                 <td style="text-align: left">
@@ -14,7 +14,7 @@
                 </td>
             </tr>
             <tr>
-                <td style="width: 30%; text-align: right;">
+                <td style="text-align: right;">
                     UM:
                 </td>
                 <td style="text-align: left">
@@ -22,7 +22,7 @@
                 </td>
             </tr>
             <tr>
-                <td style="width: 30%; text-align: right;">
+                <td style="text-align: right;">
                     Del:
                 </td>
                 <td style="text-align: left">
@@ -30,7 +30,7 @@
                 </td>
             </tr>
             <tr>
-                <td style="width: 30%; text-align: right;">
+                <td style="text-align: right;">
                     Al:
                 </td>
                 <td style="text-align: left">
@@ -39,9 +39,35 @@
             </tr>
         </table>
         <div style="height: 20px" />
-        <el-image :src="image_not_found" fit="contain"/>
-        <div style="height: 20px" />
-        <el-table
+        
+        <el-carousel indicator-position="outside" arrow="always">
+            <el-carousel-item v-for="damage in damages" :key="damage">
+                <el-image :src="image_not_found" fit="contain"/>
+                    <el-table
+                    :data="[damage]"
+                    border
+                    style="width: 100%">
+                    <el-table-column
+                        prop="damage"
+                        label="Daño"
+                        width="100"
+                    >
+                    </el-table-column>
+                    <el-table-column
+                        prop="severity"
+                        label="Severidad"
+                        width="120">
+                    </el-table-column>
+                    <el-table-column
+                        prop="ammount"
+                        label="Cantidad">
+                    </el-table-column>
+                </el-table>
+            </el-carousel-item>
+        </el-carousel>
+        <!-- <el-image :src="image_not_found" fit="contain"/>
+        <div style="height: 20px" /> -->
+        <!-- <el-table
             :data="damages"
             border
             style="width: 100%">
@@ -59,7 +85,7 @@
                 prop="ammount"
                 label="Cantidad">
             </el-table-column>
-        </el-table>
+        </el-table> -->
         <Navbar/>
     </div>
 </template>
@@ -99,6 +125,7 @@ export default {
                     this.loading = false;
                     for(var damage of data) {
                         this.damages.push({
+                            id: damage.id,
                             damage: damage.number,
                             severity: 'L',
                             ammount: 1

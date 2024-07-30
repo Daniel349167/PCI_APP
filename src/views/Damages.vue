@@ -9,12 +9,12 @@
         <div style="height: 20px" />
         <el-form ref="form" :model="form" label-width="80px" size="mini">
             <el-form-item label="Del:">
-                <el-input v-model="form.fromkm" style="width: 50px;"></el-input> km + 
-                <el-input v-model="form.fromm" style="width: 50px;"></el-input> m
+                <el-input v-model="form.from_km" style="width: 50px;"></el-input> km + 
+                <el-input v-model="form.from_m" style="width: 50px;"></el-input> m
             </el-form-item>
             <el-form-item label="Al:">
-                <el-input v-model="form.tokm" style="width: 50px;"></el-input> km + 
-                <el-input v-model="form.tom" style="width: 50px;"></el-input> m
+                <el-input v-model="form.tok_m" style="width: 50px;"></el-input> km + 
+                <el-input v-model="form.to_m" style="width: 50px;"></el-input> m
             </el-form-item>
             <el-form-item label="Sección:">
                 <el-radio-group v-model="form.section">
@@ -103,10 +103,10 @@ export default {
         },
         loadSample() {
             this.form = {
-                fromkm: 0,
-                fromm: 0,
-                tokm: 0,
-                tom: 0,
+                from_km: 0,
+                from_m: 0,
+                to_km: 0,
+                to_m: 0,
                 section: 'Derecha'
             }
         },
