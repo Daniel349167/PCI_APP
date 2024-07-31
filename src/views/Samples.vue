@@ -65,7 +65,7 @@ export default {
         },
         loadSamples() {
             this.samples = [];
-            fetch(this.authBaseUrl()+'/api/samples/' + this.$route.params.project, {
+            fetch(`${this.authBaseUrl()}/api/projects/${this.$route.params.project}/samples`, {
                 method: 'GET',
                 headers: this.authHeaders()
             })

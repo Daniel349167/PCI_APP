@@ -13,13 +13,13 @@
                 <el-input v-model="form.from_m" style="width: 50px;"></el-input> m
             </el-form-item>
             <el-form-item label="Al:">
-                <el-input v-model="form.tok_m" style="width: 50px;"></el-input> km + 
+                <el-input v-model="form.to_km" style="width: 50px;"></el-input> km + 
                 <el-input v-model="form.to_m" style="width: 50px;"></el-input> m
             </el-form-item>
             <el-form-item label="Sección:">
                 <el-radio-group v-model="form.section">
-                    <el-radio-button label="Izquierda" ></el-radio-button>
-                    <el-radio-button label="Derecha" ></el-radio-button>
+                    <el-radio-button label="L">Izquierda</el-radio-button>
+                    <el-radio-button label="R">Derecha</el-radio-button>
                 </el-radio-group>
             </el-form-item>
         </el-form>
@@ -45,7 +45,7 @@
         </div>
         <div class="float">
             <div>
-                <el-button @click="''" icon="el-icon-check" circle></el-button>
+                <el-button @click="updateSample()" icon="el-icon-check" circle></el-button>
             </div>
             <div style="height: 10px;" />
             <div>
@@ -83,7 +83,7 @@ export default {
         },
         loadDamages() {
             this.damages = [];
-            fetch(this.authBaseUrl()+'/api/damages/' + this.$route.params.sample, {
+            fetch(`${this.authBaseUrl()}/api/samples/${this.$route.params.sample}/damages`, {
                 method: 'GET',
                 headers: this.authHeaders()
             })
@@ -102,13 +102,14 @@ export default {
                 }); 
         },
         loadSample() {
-            this.form = {
-                from_km: 0,
-                from_m: 0,
-                to_km: 0,
-                to_m: 0,
-                section: 'Derecha'
-            }
+            fetch(`${this.authBaseUrl()}/api/samples/${this.$route.params.sample}`, {
+                method: 'GET',
+                headers: this.authHeaders()
+            })
+                .then(resp => resp.json()) 
+                .then(data => {
+                    this.form = data;
+                });
         },
         createDamage() {
             fetch(this.authBaseUrl()+'/api/damages/' + this.$route.params.sample, {
@@ -134,6 +135,34 @@ export default {
                         this.$message({
                             showClose: true,
                             message: 'Error al crear hoja',
+                            type: 'error',
+                            center: true,
+                            customClass: 'message'
+                        });
+                    }
+                }) 
+        },
+        updateSample() {
+            fetch(this.authBaseUrl()+'/api/samples/' + this.$route.params.sample + '/update', {
+                method: 'POST',
+                headers: this.authHeaders(),
+                body: JSON.stringify(this.form)
+            })
+                .then(resp => {
+                    if(resp.status == 200) {
+                        this.$message({
+                            showClose: true,
+                            message: 'S',
+                            type: 'success',
+                            center: true,
+                            customClass: 'message'
+                        });
+                        this.dialogVisible = false;
+                        this.loaddamages();
+                    } else {
+                        this.$message({
+                            showClose: true,
+                            message: 'F',
                             type: 'error',
                             center: true,
                             customClass: 'message'

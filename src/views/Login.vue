@@ -47,6 +47,7 @@ export default {
             this.$router.push(route);
         },
         login() {
+            var loading = this.$loading();
             fetch(this.authBaseUrl()+'/api/login', {
                 method: 'POST',
                 headers: {
@@ -68,7 +69,18 @@ export default {
                             center: true,
                             customClass: 'message'
                         });
-                }); 
+                    loading.close();
+                })
+                .catch(error => {
+                    this.$message({
+                        showClose: true,
+                        message: 'Ocurrió un error',
+                        type: 'error',
+                        center: true,
+                        customClass: 'message'
+                    });
+                    loading.close();
+                });
         }
     }
 }

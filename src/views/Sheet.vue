@@ -94,11 +94,14 @@ export default {
             )
         },
         loadDamage() {
-            this.form = {
-                type: 1,
-                severity: 'M',
-                amount: 1
-            }
+            fetch(`${this.authBaseUrl()}/api/damages/${this.$route.params.damage}`, {
+                method: 'GET',
+                headers: this.authHeaders()
+            })
+                .then(resp => resp.json()) 
+                .then(data => {
+                    this.form = data;
+                });
         }
     }
 }

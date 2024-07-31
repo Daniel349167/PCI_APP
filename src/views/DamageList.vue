@@ -39,53 +39,36 @@
             </tr>
         </table>
         <div style="height: 20px" />
-        
-        <el-carousel indicator-position="outside" arrow="always">
-            <el-carousel-item v-for="damage in damages" :key="damage">
+        <el-carousel indicator-position="outside" arrow="always" height="350px" :autoplay="false">
+            <el-carousel-item v-for="damage in damages" :key="damage.id">
                 <el-image :src="image_not_found" fit="contain"/>
-                    <el-table
-                    :data="[damage]"
-                    border
-                    style="width: 100%">
+                <el-table
+                :data="[damage]"
+                border
+                style="width: 100%">
                     <el-table-column
                         prop="damage"
                         label="Daño"
-                        width="100"
+                        width="90"
+                        align="center"
                     >
                     </el-table-column>
                     <el-table-column
                         prop="severity"
                         label="Severidad"
-                        width="120">
+                        align="center"
+                    >
                     </el-table-column>
                     <el-table-column
                         prop="ammount"
-                        label="Cantidad">
+                        label="Cantidad"
+                        width="90"
+                        align="center"
+                    >
                     </el-table-column>
                 </el-table>
             </el-carousel-item>
         </el-carousel>
-        <!-- <el-image :src="image_not_found" fit="contain"/>
-        <div style="height: 20px" /> -->
-        <!-- <el-table
-            :data="damages"
-            border
-            style="width: 100%">
-            <el-table-column
-                prop="damage"
-                label="Daño"
-                width="100">
-            </el-table-column>
-            <el-table-column
-                prop="severity"
-                label="Severidad"
-                width="120">
-            </el-table-column>
-            <el-table-column
-                prop="ammount"
-                label="Cantidad">
-            </el-table-column>
-        </el-table> -->
         <Navbar/>
     </div>
 </template>

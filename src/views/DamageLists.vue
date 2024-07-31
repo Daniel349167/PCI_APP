@@ -23,6 +23,9 @@
                 </el-row>
             </el-card>
         </div>
+        <div class="float">
+            <el-button @click=";" icon="el-icon-download" circle></el-button>
+        </div>
 		<Navbar/>
     </div>
 </template>

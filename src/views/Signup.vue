@@ -56,6 +56,7 @@ export default {
             this.$router.push(route);
         },
         register() {
+            var loading = this.$loading();
             fetch(this.authBaseUrl()+'/api/register', {
                 method: 'POST',
                 headers: {
@@ -67,7 +68,6 @@ export default {
                 .then(resp => resp.json()) 
                 .then(data => {
                     if (data.status) {
-                        localStorage.api_token = data.token;
                         this.$message({
                             showClose: true,
                             message: 'Usuario creado',
@@ -84,6 +84,7 @@ export default {
                             center: true,
                             customClass: 'message'
                         });
+                    loading.close();
                 }); 
         }
     }
