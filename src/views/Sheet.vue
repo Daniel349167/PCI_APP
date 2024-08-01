@@ -18,20 +18,20 @@
                 <el-col>
                     <label for="severity" class="input-label">Severidad</label>
                     <el-radio-group v-model="form.severity" size="mini" id="severity">
-                        <el-radio-button label="L" ></el-radio-button>
-                        <el-radio-button label="M" ></el-radio-button>
-                        <el-radio-button label="H" ></el-radio-button>
+                        <el-radio-button label="1">L</el-radio-button>
+                        <el-radio-button label="2">M</el-radio-button>
+                        <el-radio-button label="3">H</el-radio-button>
                     </el-radio-group>
                 </el-col>
             </el-row>
         </div>
-        <el-image :src="image_url" fit="contain"/>
+        <el-image :src="image_url" fit="contain" v-if="image_url"/>
         <el-row style="position: fixed; bottom: 80px; left: 0; width: 100%;">
             <el-col :span="12">
-                <el-button icon="el-icon-camera-solid" @click="camera()" style="font-size: 24px"></el-button>
+                <el-button icon="el-icon-camera" @click="camera()" style="font-size: 24px"></el-button>
             </el-col>
             <el-col :span="12">
-                <el-button icon="el-icon-success" style="font-size: 24px"></el-button>
+                <el-button icon="el-icon-check" @click="updateDamage()" style="font-size: 24px"></el-button>
             </el-col>
         </el-row>
         <Navbar/>
@@ -94,7 +94,7 @@ export default {
             )
         },
         loadDamage() {
-            fetch(`${this.authBaseUrl()}/api/damages/${this.$route.params.damage}`, {
+            fetch(this.authBaseUrl()+'/api/damages/' + this.$route.params.damage, {
                 method: 'GET',
                 headers: this.authHeaders()
             })
@@ -102,6 +102,34 @@ export default {
                 .then(data => {
                     this.form = data;
                 });
+        },
+        updateDamage() {
+            fetch(`${this.authBaseUrl()}/api/damages/${this.$route.params.damage}/update`, {
+                method: 'POST',
+                headers: this.authHeaders(),
+                body: JSON.stringify(this.form)
+            })
+                .then(resp => {
+                    if(resp.status == 200) {
+                        this.$message({
+                            showClose: true,
+                            message: 'Guardado',
+                            type: 'success',
+                            center: true,
+                            customClass: 'message'
+                        });
+                        this.dialogVisible = false;
+                        this.loadDamages();
+                    } else {
+                        this.$message({
+                            showClose: true,
+                            message: 'Error al guardar',
+                            type: 'error',
+                            center: true,
+                            customClass: 'message'
+                        });
+                    }
+                }) 
         }
     }
 }

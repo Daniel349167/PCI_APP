@@ -102,7 +102,7 @@ export default {
                 }); 
         },
         loadSample() {
-            fetch(`${this.authBaseUrl()}/api/samples/${this.$route.params.sample}`, {
+            fetch(this.authBaseUrl()+'/api/samples/' + this.$route.params.sample, {
                 method: 'GET',
                 headers: this.authHeaders()
             })
@@ -130,7 +130,7 @@ export default {
                             customClass: 'message'
                         });
                         this.dialogVisible = false;
-                        this.loaddamages();
+                        this.loadDamages();
                     } else {
                         this.$message({
                             showClose: true,
@@ -143,7 +143,7 @@ export default {
                 }) 
         },
         updateSample() {
-            fetch(this.authBaseUrl()+'/api/samples/' + this.$route.params.sample + '/update', {
+            fetch(`${this.authBaseUrl()}/api/samples/${this.$route.params.sample}/update`, {
                 method: 'POST',
                 headers: this.authHeaders(),
                 body: JSON.stringify(this.form)
@@ -152,17 +152,17 @@ export default {
                     if(resp.status == 200) {
                         this.$message({
                             showClose: true,
-                            message: 'S',
+                            message: 'Guardado',
                             type: 'success',
                             center: true,
                             customClass: 'message'
                         });
                         this.dialogVisible = false;
-                        this.loaddamages();
+                        this.loadDamages();
                     } else {
                         this.$message({
                             showClose: true,
-                            message: 'F',
+                            message: 'Error al guardar',
                             type: 'error',
                             center: true,
                             customClass: 'message'

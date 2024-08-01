@@ -10,7 +10,7 @@
                     Proyecto:
                 </td>
                 <td style="text-align: left">
-                    {{form.project}}
+                    {{sample.project}}
                 </td>
             </tr>
             <tr>
@@ -18,7 +18,7 @@
                     UM:
                 </td>
                 <td style="text-align: left">
-                    UM {{form.sample}}
+                    UM {{sample.number}}
                 </td>
             </tr>
             <tr>
@@ -26,7 +26,7 @@
                     Del:
                 </td>
                 <td style="text-align: left">
-                    {{form.from}}
+                    {{sample.from_km}} km + {{sample.from_m}} m
                 </td>
             </tr>
             <tr>
@@ -34,7 +34,7 @@
                     Al:
                 </td>
                 <td style="text-align: left">
-                    {{form.to}}
+                    {{sample.to_km}} km + {{sample.to_m}} m
                 </td>
             </tr>
         </table>
@@ -47,7 +47,7 @@
                 border
                 style="width: 100%">
                     <el-table-column
-                        prop="damage"
+                        prop="type"
                         label="Daño"
                         width="90"
                         align="center"
@@ -60,7 +60,7 @@
                     >
                     </el-table-column>
                     <el-table-column
-                        prop="ammount"
+                        prop="amount"
                         label="Cantidad"
                         width="90"
                         align="center"
@@ -86,7 +86,7 @@ export default {
             image_not_found: require('../assets/images/not_found.png'),
             loading: true,
             damages: [],
-            form: {}
+            sample: {}
         }
     },
     mounted() {
@@ -98,31 +98,28 @@ export default {
         
         loadDamages() {
             this.damages = [];
-            fetch(this.authBaseUrl()+'/api/damages/' + this.$route.params.sample, {
+            fetch(`${this.authBaseUrl()}/api/samples/${this.$route.params.sample}/damages`, {
                 method: 'GET',
                 headers: this.authHeaders()
             })
                 .then(resp => resp.json()) 
                 .then(data => {
-                    console.dir(data);
-                    this.loading = false;
-                    for(var damage of data) {
-                        this.damages.push({
-                            id: damage.id,
-                            damage: damage.number,
-                            severity: 'L',
-                            ammount: 1
-                        });
-                    }
+                    this.damages = data;
+                    let map = ['', 'L', 'M', 'H'];
+                    for (let damage of this.damages)
+                        damage.severity = map[damage.severity];
                 }); 
         },
         loadSample() {
-            this.form = {
-                project: 'Proyecto 1',
-                sample: 1,
-                from: '40km+30m',
-                to: '40km+30m'
-            }
+            fetch(this.authBaseUrl()+'/api/samples/' + this.$route.params.sample, {
+                method: 'GET',
+                headers: this.authHeaders()
+            })
+                .then(resp => resp.json()) 
+                .then(data => {
+                    this.sample = data;
+                    this.sample.project = 'Proyecto 1'
+                });
         }
     }
 }

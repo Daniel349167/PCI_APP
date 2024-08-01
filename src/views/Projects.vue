@@ -115,7 +115,7 @@ export default {
                     } else {
                         this.$message({
                             showClose: true,
-                            message: 'Error al crear proyecto"',
+                            message: 'Error al crear proyecto',
                             type: 'error',
                             center: true,
                             customClass: 'message'
@@ -126,7 +126,7 @@ export default {
     }
 }
 </script>
-<style>
+<style scoped>
 .float {
 	position: fixed;
 	bottom: 80px;
