@@ -41,11 +41,11 @@
         <div style="height: 20px" />
         <el-carousel indicator-position="outside" arrow="always" height="350px" :autoplay="false">
             <el-carousel-item v-for="damage in damages" :key="damage.id">
-                <el-image :src="image_not_found" fit="contain"/>
+                <el-image :src="damage.image" fit="contain" style="height: 200px"/>
                 <el-table
-                :data="[damage]"
-                border
-                style="width: 100%">
+                    :data="[damage]"
+                    border
+                    style="width: 100%">
                     <el-table-column
                         prop="type"
                         label="Daño"
@@ -106,8 +106,11 @@ export default {
                 .then(data => {
                     this.damages = data;
                     let map = ['', 'L', 'M', 'H'];
-                    for (let damage of this.damages)
+                    for (let damage of this.damages) {
                         damage.severity = map[damage.severity];
+                        damage.image = this.image_not_found;
+                    }
+                    this.loadImages();
                 }); 
         },
         loadSample() {
@@ -120,6 +123,20 @@ export default {
                     this.sample = data;
                     this.sample.project = 'Proyecto 1'
                 });
+        },
+        async loadImages() {
+            for(var damage of this.damages) {
+                await fetch(`${this.authBaseUrl()}/api/damages/${damage.id}/image`, {
+                    method: 'GET',
+                    headers: this.authHeaders(),
+                })
+                    .then(resp => resp.json()) 
+                    .then(data => {
+                        if(data.image)
+                            damage.image = data.image;
+                        damage.id = data.id;
+                    });
+            }
         }
     }
 }

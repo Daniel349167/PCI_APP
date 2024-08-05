@@ -94,11 +94,12 @@ export default {
                     for(var damage of data) {
                         this.damages.push({
                             id: damage.id,
-                            image: damage.image ? damage.image : this.image_not_found,
+                            image: this.image_not_found,
                             number: damage.number,
                             time: `${damage.time.substr(0,10)} ${damage.time.substr(11,8)}`
                         });
                     }
+                    this.loadImages();
                 }); 
         },
         loadSample() {
@@ -169,6 +170,19 @@ export default {
                         });
                     }
                 }) 
+        },
+        async loadImages() {
+            for(var damage of this.damages) {
+                await fetch(`${this.authBaseUrl()}/api/damages/${damage.id}/image`, {
+                    method: 'GET',
+                    headers: this.authHeaders(),
+                })
+                    .then(resp => resp.json()) 
+                    .then(data => {
+                        if(data.image)
+                            damage.image = data.image;
+                    });
+            }
         }
     }
 }

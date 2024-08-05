@@ -25,7 +25,7 @@
                 </el-col>
             </el-row>
         </div>
-        <el-image :src="image_url" fit="contain" v-if="image_url"/>
+        <el-image :src="form.image" fit="contain" v-if="form.image"/>
         <el-row style="position: fixed; bottom: 80px; left: 0; width: 100%;">
             <el-col :span="12">
                 <el-button icon="el-icon-camera" @click="camera()" style="font-size: 24px"></el-button>
@@ -52,7 +52,6 @@ export default {
             form: {
                 type: null
             },
-            image_url: '',
             image: null
         }
     },
@@ -69,8 +68,8 @@ export default {
             navigator.camera.getPicture(
                 async function(event) { 
                     console.log('getPicture');
-                    self.image_url = 'data:image/jpg;base64,' + event;
-                    await fetch(self.image_url)
+                    self.form.image = 'data:image/jpg;base64,' + event;
+                    await fetch(self.form.image)
                         .then(response => response.blob())
                         .then(blob => {
                             const fd = new FormData();
