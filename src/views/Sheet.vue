@@ -56,7 +56,9 @@ export default {
         }
     },
     mounted() {
-        this.loadDamage()
+        this.loadDamage();
+        this.getImage();
+        console.log(this)
     },
     methods: {
         camera() {
@@ -69,16 +71,6 @@ export default {
                 async function(event) { 
                     console.log('getPicture');
                     self.form.image = 'data:image/jpg;base64,' + event;
-                    await fetch(self.form.image)
-                        .then(response => response.blob())
-                        .then(blob => {
-                            const fd = new FormData();
-                            var filename = new Date().getTime() + '.jpg';
-                            fd.set('imgfile', blob, filename);
-                            self.image = fd.get('imgfile');
-                        });
-                    console.log('self.image');
-                    console.dir(self.image);
                 },
                 function(event) { 
                     console.log('Error')
@@ -129,6 +121,17 @@ export default {
                         });
                     }
                 }) 
+        },
+        getImage() {
+            fetch(`${this.authBaseUrl()}/api/damages/${this.$route.params.damage}/image`, {
+                method: 'GET',
+                headers: this.authHeaders()
+            })
+                .then(resp => resp.json()) 
+                .then(data => {
+                    this.form.image = data.image;
+                    this.form.type = this.form.type++;
+                });
         }
     }
 }

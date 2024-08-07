@@ -39,9 +39,10 @@
             </tr>
         </table>
         <div style="height: 20px" />
-        <el-carousel indicator-position="outside" arrow="always" height="350px" :autoplay="false">
+        <el-carousel v-loading="!damages.length" indicator-position="outside" arrow="always" height="350px" :autoplay="false" ref="car">
             <el-carousel-item v-for="damage in damages" :key="damage.id">
-                <el-image :src="damage.image" fit="contain" style="height: 200px"/>
+                <el-image v-if="damage.image" :src="damage.image" fit="contain" style="height: 200px"/>
+                <div v-else v-loading="true" style="height: 200px"/>
                 <el-table
                     :data="[damage]"
                     border
@@ -108,7 +109,7 @@ export default {
                     let map = ['', 'L', 'M', 'H'];
                     for (let damage of this.damages) {
                         damage.severity = map[damage.severity];
-                        damage.image = this.image_not_found;
+                        damage.image = null;
                     }
                     this.loadImages();
                 }); 
@@ -134,7 +135,9 @@ export default {
                     .then(data => {
                         if(data.image)
                             damage.image = data.image;
-                        damage.id = data.id;
+                        else
+                            damage.image = this.image_not_found;
+                        damage.id = damage.id++; // Update carousel element
                     });
             }
         }
