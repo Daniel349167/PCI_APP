@@ -30,6 +30,7 @@
     "cordova-android": "^13.0.0",
     "cordova-pdf-generator": "^2.1.1",
     "cordova-plugin-camera": "^7.0.0",
+    "cordova-plugin-file": "^8.1.0",
     "css-loader": "^0.28.0",
     "extract-text-webpack-plugin": "^3.0.0",
     "file-loader": "^1.1.4",
@@ -72,7 +73,10 @@
       "cordova-plugin-camera": {
         "ANDROIDX_CORE_VERSION": "1.6.+"
       },
-      "cordova-pdf-generator": {}
+      "cordova-pdf-generator": {},
+      "cordova-plugin-file": {
+        "ANDROIDX_WEBKIT_VERSION": "1.4.0"
+      }
     }
   }
 }
