@@ -1,7 +1,7 @@
 <template>
     <div style="width: 90vw; margin: auto">
 		<div class="page-title">
-			Daño {{ $route.params.damage }}
+			Daño {{ form.number }}
 		</div>
         <div style="margin: 20px 0px" class="damage-sheet-form">
             <el-row>
@@ -71,6 +71,7 @@ export default {
                 async function(event) { 
                     console.log('getPicture');
                     self.form.image = 'data:image/jpg;base64,' + event;
+                    self.form.type = self.form.type++;
                 },
                 function(event) { 
                     console.log('Error')
