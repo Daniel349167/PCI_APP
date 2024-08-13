@@ -1,5 +1,6 @@
 <template>
     <div style="width: 90vw; margin: auto">
+		<BackButton/>
 		<div class="page-title">
 			RESULTADOS
 		</div>
@@ -30,10 +31,12 @@
 </template>
 <script>
 import Navbar from '../components/Navbar.vue';
+import BackButton from '../components/BackButton.vue';
 import { auth } from "../assets/mixins/auth.js"; 
 export default {
     components: {
-    Navbar
+        Navbar,
+        BackButton
     },
     mixins: [auth],	
     data() {

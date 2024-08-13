@@ -1,5 +1,6 @@
 <template>
     <div style="width: 90vw; margin: auto">
+        <BackButton/>
 		<div class="page-title">
 			UNIDAD DE MUESTRA
 		</div>
@@ -41,11 +42,13 @@
 </template>
 <script>
 import Navbar from '../components/Navbar.vue';
+import BackButton from '../components/BackButton.vue';
 import { auth } from "../assets/mixins/auth.js"; 
 import Moment from 'moment';
 export default {
     components: {
-        Navbar
+        Navbar,
+        BackButton
     },
     mixins: [auth],	
     data() {
