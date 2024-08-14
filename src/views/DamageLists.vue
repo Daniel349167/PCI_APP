@@ -140,15 +140,17 @@ export default {
                 
                 window.resolveLocalFileSystemURL(folderpath, function(dir) {
                     console.log("Access to the directory granted succesfully");
-                    dir.getFile(filename, {create:true}, function(file) {
-                        console.log("File created succesfully.");
-                        file.createWriter(function(fileWriter) {
-                            console.log("Writing content to file");
-                            fileWriter.write(DataBlob);
-                        }, function(){
-                            alert('Unable to save file in path '+ folderpath);
+                    dir.getDirectory('Fallas', { create: true }, function(dir2) {
+                        dir2.getFile(filename, {create: true}, function(file) {
+                            console.log("File created succesfully.");
+                            file.createWriter(function(fileWriter) {
+                                console.log("Writing content to file");
+                                fileWriter.write(DataBlob);
+                            }, function(){
+                                alert('Unable to save file in path '+ folderpath);
+                            });
                         });
-                    });
+                    })
                 });
             }
             await this.loadDamages();
