@@ -3,16 +3,16 @@
 		<BackButton/>
 		<div class="page-title">
             Resultados<br />
-			Proyecto {{ $route.params.result }}
+			Proyecto {{ $route.params.project }}
 		</div>
         <div style="height: 20px" />
-        <el-button @click="goto('/damagelists/'+$route.params.result)">Inventario de fallas</el-button>
+        <el-button @click="goto('/damagelists/'+$route.params.project)">Inventario de fallas</el-button>
         <div style="height: 10px" />
-        <el-button>Resumen de metrado daños por UM</el-button>
+        <el-button @click="goto(`/summaries/${$route.params.project}/metering`)">Resumen de metrado daños por UM</el-button>
         <div style="height: 10px" />
-        <el-button>Resumen de Valores Deducidos por UM</el-button>
+        <el-button @click="goto(`/summaries/${$route.params.project}/deduct`)">Resumen de Valores Deducidos por UM</el-button>
         <div style="height: 10px" />
-        <el-button>Resumen PCI por UM</el-button>
+        <el-button @click="goto(`/summaries/${$route.params.project}/pci`)">Resumen PCI por UM</el-button>
         <Navbar/>
     </div>
 </template>

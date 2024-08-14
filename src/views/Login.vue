@@ -1,5 +1,5 @@
 <template>
-    <div style="width: 80vw; margin: auto">
+    <div style="width: 80vw; margin: auto; margin-top: 80px;">
         <div>
             <el-image :src="logo" fit="contain" style="width: 60vw"/>
         </div>

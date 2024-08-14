@@ -83,7 +83,10 @@ export default {
             ['M', 'Falla Media'],
             ['H', 'Falla Alta'],
             ['VD', 'Valor Deducido'],
-            ['PCI', 'Índice de Condición de Pavimento']
+            ['PCI', 'Índice de Condición de Pavimento'],
+            ['L', 'Longitud de carretera'],
+            ['A', 'Ancho de carretera'],
+            ['l', 'Longitud de unidad de muestra']
         ]
     }
   },

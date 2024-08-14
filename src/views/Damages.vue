@@ -5,7 +5,7 @@
 			HOJA DE RELEVAMIENTO
 		</div>
 		<div class="page-title">
-			UM {{ $route.params.sample }}
+			UM {{ form.number }}
 		</div>
         <div v-if="loading" v-loading="true" style="height: 160px" />
         <div v-for="damage in damages" :key="damage.id" style="margin: 20px 0px" class="blue-card"
