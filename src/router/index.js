@@ -88,17 +88,22 @@ export default new Router({
       component: DamageList
     },
     {
-      path: '/summaries/:project/:summary',
+      path: '/summaries/metering/:project',
       name: 'Summaries',
       component: Summaries
     },
     {
-      path: '/summaries/:project/metering/:sample',
+      path: '/summaries/deduct/:project',
+      name: 'Summaries',
+      component: Summaries
+    },
+    {
+      path: '/summaries/metering/:project/:sample',
       name: 'MeteringSummary',
       component: MeteringSummary
     },
     {
-      path: '/summaries/:project/deduct/:sample',
+      path: '/summaries/deduct/:project/:sample',
       name: 'DeductValuesSummary',
       component: DeductValuesSummary
     },

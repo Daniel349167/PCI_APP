@@ -1,12 +1,26 @@
 <template>
     <div style="width: 90vw; margin: auto">
         <BackButton/>
-		<div class="page-title">
-			UNIDAD DE MUESTRA
-		</div>
-		<div class="page-title">
-			Proyecto {{ $route.params.project }}
-		</div>
+        <div class="page-title">
+                UNIDAD DE MUESTRA
+        </div>
+        <div class="page-title">
+                {{ project.name }}
+        </div>
+        <el-row>
+            <el-col :span="8">
+                <label for="L" class="input-label">L</label>
+                <el-input v-model="project.longitudcarretera" id="L" size="mini"/>
+            </el-col>
+            <el-col :span="8">
+                <label for="A" class="input-label">A</label>
+                <el-input v-model="project.anchoum" id="A" size="mini"/>
+            </el-col>
+            <el-col :span="8">
+                <label for="l" class="input-label">l</label>
+                <el-input v-model="project.longitudum" id="l" size="mini"/>
+            </el-col>
+        </el-row>
         <div v-if="loading" v-loading="true" style="height: 160px" />
         <div v-for="sample in samples" :key="sample.id" style="margin: 20px 0px" class="blue-card"
             @click="goto('/samples/'+sample.id)"
@@ -17,11 +31,17 @@
                         <el-image :src="sample.image" fit="contain"/>
                     </el-col>
                     <el-col :span="16" style="text-align: left; padding: 0px 20px">
-                        <div>
+                        <div style="font-size: 16px; font-weight: bold">
                             UM {{ sample.number }}
                         </div>
-                        <div style="color: white; font-size: 12px;">
+                        <div style="color: white; font-size: 12px; margin-top: 3px">
                             {{ sample.time }}
+                        </div>
+                        <div style="font-size: 12px; margin-top: 5px">
+                            Del: {{ sample.from }}
+                        </div>
+                        <div style="font-size: 12px; margin-top: 3px">
+                            Al: {{ sample.to }}
                         </div>
                     </el-col>
                 </el-row>
@@ -37,7 +57,7 @@
             </div>
         </div>
 
-		<Navbar/>
+                <Navbar/>
     </div>
 </template>
 <script>
@@ -50,16 +70,26 @@ export default {
         Navbar,
         BackButton
     },
-    mixins: [auth],	
+    mixins: [auth],        
     data() {
         return {
             image_not_found: require('../assets/images/not_found.png'),
+            project: {
+                name: '\xa0',
+                longitudum: 0,
+                anchoum: 0,
+                longitudcarretera: 0
+            },
             samples: [],
             loading: true
         }
     },
     mounted() {
         console.log('Samples');
+        fetch(`${this.authBaseUrl()}/api/projects/${this.$route.params.project}`, {
+            method: 'GET',
+            headers: this.authHeaders()
+        }).then(resp => resp.json()).then(data => this.project = data); 
         this.loadSamples();
     },
     methods: {
@@ -81,7 +111,13 @@ export default {
                             id: sample.id,
                             image: sample.image ? sample.image : this.image_not_found,
                             number: sample.number,
-                            time: `${sample.time.substr(0,10)} ${sample.time.substr(11,8)}`
+                            time: `${sample.time.substr(0,10)} ${sample.time.substr(11,8)}`,
+                            from: 
+                                (sample.from_km!=null ? sample.from_km : '') + 'km + ' + 
+                                (sample.from_m!=null ? sample.from_m : '')+ 'm',
+                            to: 
+                                (sample.to_km!=null ? sample.to_km : '') + 'km + ' + 
+                                (sample.to_m!=null ? sample.to_m : '') + 'm',
                         });
                     }
                 }); 
@@ -123,9 +159,9 @@ export default {
 </script>
 <style>
 .float {
-	position: fixed;
-	bottom: 80px;
-	right: 20px;
+        position: fixed;
+        bottom: 80px;
+        right: 20px;
 }
 .float .el-button {
     border-color: #2C39A994;

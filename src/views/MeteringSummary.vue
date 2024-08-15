@@ -56,11 +56,11 @@ export default {
             image_not_found: require('../assets/images/not_found.png'),
             loading: true,
             sample: {},
-            summary: []
+            summary: [{}]
         }
     },
     mounted() {
-        console.log('DamageList');
+        console.log('MeteringSummary');
         this.loadSample();
         this.loadSummary();
     },

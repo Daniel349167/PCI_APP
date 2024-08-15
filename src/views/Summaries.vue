@@ -1,12 +1,12 @@
 <template>
     <div style="width: 90vw; margin: auto">
         <BackButton/>
-		<div class="page-title">
-			{{ title }}
-		</div>
+        <div class="page-title">
+            {{ title }}
+        </div>
         <div v-if="loading" v-loading="true" style="height: 160px" />
         <div v-for="sample in samples" :key="sample.id" style="margin: 20px 0px" class="blue-card"
-            @click="goto(`${$route.params.summary}/${sample.id}`)"
+            @click="goto(`${$route.params.project}/${sample.id}`)"
         >
             <el-card>
                 <el-row>
@@ -14,10 +14,10 @@
                         <el-image :src="sample.image" fit="contain"/>
                     </el-col>
                     <el-col :span="16" style="text-align: left; padding: 0px 20px">
-                        <div>
+                        <div style="font-size: 16px; font-weight: bold">
                             UM {{ sample.number }}
                         </div>
-                        <div style="color: white; font-size: 12px;">
+                        <div style="color: white; font-size: 12px; margin-top: 3px">
                             {{ sample.time }}
                         </div>
                     </el-col>
@@ -27,7 +27,7 @@
         <div class="float">
             <el-button @click="downloadPDF" icon="el-icon-download" circle></el-button>
         </div>
-		<Navbar/>
+        <Navbar/>
     </div>
 </template>
 <script>
@@ -40,7 +40,7 @@ export default {
         Navbar,
         BackButton
     },
-    mixins: [auth],	
+    mixins: [auth],    
     data() {
         return {
             image_not_found: require('../assets/images/not_found.png'),
@@ -51,7 +51,7 @@ export default {
     },
     mounted() {
         console.log('Summaries');
-        switch(this.$route.params.summary) {
+        switch(this.$route.path.split('/')[2]) {
         case 'metering':
             this.title = 'Resumen de Metrado por UM'
             break;
@@ -92,9 +92,9 @@ export default {
 </script>
 <style>
 .float {
-	position: fixed;
-	bottom: 80px;
-	right: 20px;
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
 }
 .float .el-button {
     border-color: #2C39A994;

@@ -85,7 +85,7 @@ export default {
             ['VD', 'Valor Deducido'],
             ['PCI', 'Índice de Condición de Pavimento'],
             ['L', 'Longitud de carretera'],
-            ['A', 'Ancho de carretera'],
+            ['A', 'Ancho de unidad de muestra'],
             ['l', 'Longitud de unidad de muestra']
         ]
     }

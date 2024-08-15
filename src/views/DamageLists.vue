@@ -14,10 +14,10 @@
                         <el-image :src="sample.image" fit="contain"/>
                     </el-col>
                     <el-col :span="16" style="text-align: left; padding: 0px 20px">
-                        <div>
+                        <div style="font-size: 16px; font-weight: bold">
                             UM {{ sample.number }}
                         </div>
-                        <div style="color: white; font-size: 12px;">
+                        <div style="color: white; font-size: 12px; margin-top: 3px">
                             {{ sample.time }}
                         </div>
                     </el-col>

@@ -6,7 +6,6 @@
 		</div>
         <div v-if="loading" v-loading="true" style="height: 160px" />
 		<div v-for="project in projects" :key="project.id" style="margin: 20px 0px"
-            class="project-results"
             @click="goto('/results/'+project.id)"
         >
 			<el-card>
@@ -15,10 +14,10 @@
 						<el-image :src="project.image" fit="contain"/>
 					</el-col>
 					<el-col :span="16" style="text-align: left; padding: 0px 20px">
-						<div>
+						<div style="font-size: 16px; font-weight: bold">
 							{{ project.name }}
 						</div>
-						<div style="color: white; font-size: 12px;">
+						<div style="color: white; font-size: 12px; margin-top: 3px;">
 							{{ project.time }}
 						</div>
 					</el-col>

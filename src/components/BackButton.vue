@@ -2,7 +2,7 @@
   <div style="
     text-align: left;
     margin-left: -10px;
-    margin-bottom: -10px;
+    margin-bottom: -5px;
   ">
     <el-button @click="back()" icon="el-icon-back" circle
       style="
