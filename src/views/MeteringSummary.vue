@@ -4,40 +4,7 @@
 		<div class="page-title">
 			Resumen de Metrado de UM {{ sample.number }}
 		</div>
-    <el-table
-      :data="summary"
-      border
-      style="width: 100%; margin-top: 20px;"
-      size="mini"
-    >
-      <el-table-column
-        prop="id"
-        label="N°"
-        align="center"
-        width="50"
-      ></el-table-column>
-      <el-table-column
-        prop="tipo_falla"
-        label="Tipo falla"
-        align="center"
-      ></el-table-column>
-      <el-table-column
-        prop="unidad"
-        label="Unidad"
-        align="center"
-        width="70"
-      ></el-table-column>
-      <el-table-column
-        prop="severidad"
-        label="Severidad"
-        align="center"
-      ></el-table-column>
-      <el-table-column
-        prop="metrado"
-        label="Metrado"
-        align="center"
-      ></el-table-column>
-    </el-table>
+    <table id="table" style="padding: 10px 10px; width: 100%"></table>
 		<Navbar/>
   </div>
 </template>
@@ -83,7 +50,39 @@ export default {
                 .then(resp => resp.json()) 
                 .then(data => {
                     this.summary = data;
+                    this.createTable();
                 });
+        },
+        createTable() {
+          var data = [
+            { label: 'N°', key: 'id', style:''},
+            { label: 'Tipo falla', key: 'tipo_falla', style:''},
+            { label: 'Unidad', key: 'unidad', style:''},
+            { label: 'Severidad', key: 'severidad', style:''},
+            { label: 'Metrado', key: 'metrado', style:''},
+          ]
+          var table = document.getElementById('table');
+          var head = document.createElement('tr');
+          
+          for(var elem of data) {
+            var th = document.createElement('th');
+            th.appendChild(document.createTextNode(elem.label));
+            head.appendChild(th);
+          }
+          table.appendChild(head);
+
+          for(var row of this.summary) {
+            var tr = document.createElement('tr');
+            console.log('row')
+            console.log(row)
+            for(var elem of data) {
+              var td = document.createElement('td');
+              td.appendChild(document.createTextNode(row[elem.key]));
+              tr.appendChild(td);
+            }
+            table.appendChild(tr);
+          }
+
         }
     }
 }
