@@ -149,7 +149,7 @@ export default {
                             damage.image = data.image;
                         else
                             damage.image = this.image_not_found;
-                        damage.id = damage.id++; // Update carousel element
+                        this.$forceUpdate();
                     });
             }
         }
