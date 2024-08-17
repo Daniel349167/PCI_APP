@@ -4,39 +4,7 @@
 		<div class="page-title">
 			Resumen de PCI de {{ project_name }}
 		</div>
-    <el-table
-      :data="summary"
-      border
-      style="width: 100%; margin-top: 20px;"
-      size="mini"
-    >
-      <el-table-column
-        prop="UM"
-        label="UM"
-        align="center"
-        width="60"
-      ></el-table-column>
-      <el-table-column
-        prop="Del"
-        label="Del"
-        align="center"
-      ></el-table-column>
-      <el-table-column
-        prop="Al"
-        label="Al"
-        align="center"
-      ></el-table-column>
-      <el-table-column
-        prop="PCI"
-        label="Densidad"
-        align="center"
-      ></el-table-column>
-      <el-table-column
-        prop="Condición"
-        label="Condición"
-        align="center"
-      ></el-table-column>
-    </el-table>
+    <table id="table" class="summary-table pci-table"></table>
     <Navbar/>
   </div>
 </template>
@@ -76,7 +44,48 @@ export default {
                 .then(resp => resp.json()) 
                 .then(data => {
                     this.summary = data;
+                    this.createTable();
                 });
+        },
+        createTable() {
+          var data = [
+            { label: 'UM', key: 'UM'},
+            { label: 'Del', key: 'Del'},
+            { label: 'Al', key: 'Al'},
+            { label: 'PCI', key: 'PCI'},
+            { label: 'Condición', key: 'Condición'},
+          ]
+          var table = document.getElementById('table');
+          var head = document.createElement('tr');
+          
+          for(var elem of data) {
+            var th = document.createElement('th');
+            th.appendChild(document.createTextNode(elem.label));
+            head.appendChild(th);
+          }
+          table.appendChild(head);
+
+          for(var row of this.summary) {
+            var tr = document.createElement('tr');
+            for(var elem of data) {
+              var td = document.createElement('td');
+              td.appendChild(document.createTextNode(row[elem.key]));
+              if(elem.key=='Condición')
+                td.style.backgroundColor = {
+                  'Excelente': '#28B45E',
+                  'Muy bueno': '#79C142',
+                  'Bueno': '#EBE723',
+                  'Regular': '#EE2E2E',
+                  'Pobre': '#C22026',
+                  'Muy pobre': '#7A1315',
+                  'Fallado': '#D9D9D9'
+                }[row['Condición']];
+              tr.appendChild(td);
+            }
+            tr.style.backgroundColor = '#2C39A982'
+            table.appendChild(tr);
+          }
+          console.log(table.outerHTML);
         }
     }
 }

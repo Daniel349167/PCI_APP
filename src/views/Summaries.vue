@@ -34,13 +34,13 @@
 import Navbar from '../components/Navbar.vue';
 import BackButton from '../components/BackButton.vue';
 import { auth } from "../assets/mixins/auth.js"; 
-import Moment from 'moment';
+import { pdfmixin } from '../assets/mixins/pdf.js';
 export default {
     components: {
         Navbar,
         BackButton
     },
-    mixins: [auth],    
+    mixins: [auth,pdfmixin],    
     data() {
         return {
             image_not_found: require('../assets/images/not_found.png'),
@@ -84,8 +84,50 @@ export default {
                     }
                 }); 
         },
-        downloadPDF(){
-
+        async loadSummariesMetering(){
+            for(var sample of this.samples) {
+                await fetch(`${this.authBaseUrl()}/api/damage-measurement/${this.$route.params.project}/${sample.id}`, {
+                    method: 'GET',
+                    headers: this.authHeaders()
+                })
+                    .then(resp => resp.json()) 
+                    .then(data => {
+                        sample.summary = data;
+                    });
+            }
+        },
+        async loadSummariesDeduct(){
+            for(var sample of this.samples) {
+                await fetch(`${this.authBaseUrl()}/api/deducted-values/${this.$route.params.project}/${sample.id}`, {
+                    method: 'GET',
+                    headers: this.authHeaders()
+                })
+                    .then(resp => resp.json()) 
+                    .then(data => {
+                        sample.summary = data;
+                    });
+            }
+        },
+        async downloadPDF(){
+            this.downloading = true;
+            switch(this.$route.path.split('/')[2]) {
+            case 'metering':
+                await this.loadSummariesMetering();
+                await this.downloadPDFMetering(this.samples);
+                break;
+            case 'deduct':
+                await this.loadSummariesDeduct();
+                await this.downloadPDFDeduct(this.samples);
+                break;
+            }
+            this.downloading = false;
+            this.$message({
+                showClose: true,
+                message: 'Archivos descargados',
+                type: 'success',
+                center: true,
+                customClass: 'message'
+            });
         }
     }
 }

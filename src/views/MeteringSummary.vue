@@ -4,7 +4,7 @@
 		<div class="page-title">
 			Resumen de Metrado de UM {{ sample.number }}
 		</div>
-    <table id="table" style="padding: 10px 10px; width: 100%"></table>
+    <table id="table" class="summary-table"></table>
 		<Navbar/>
   </div>
 </template>
@@ -55,11 +55,11 @@ export default {
         },
         createTable() {
           var data = [
-            { label: 'N°', key: 'id', style:''},
-            { label: 'Tipo falla', key: 'tipo_falla', style:''},
-            { label: 'Unidad', key: 'unidad', style:''},
-            { label: 'Severidad', key: 'severidad', style:''},
-            { label: 'Metrado', key: 'metrado', style:''},
+            { label: 'N°', key: 'id' },
+            { label: 'Tipo falla', key: 'tipo_falla' },
+            { label: 'Unidad', key: 'unidad' },
+            { label: 'Severidad', key: 'severidad' },
+            { label: 'Metrado', key: 'metrado' },
           ]
           var table = document.getElementById('table');
           var head = document.createElement('tr');
@@ -73,8 +73,6 @@ export default {
 
           for(var row of this.summary) {
             var tr = document.createElement('tr');
-            console.log('row')
-            console.log(row)
             for(var elem of data) {
               var td = document.createElement('td');
               td.appendChild(document.createTextNode(row[elem.key]));

@@ -7,6 +7,24 @@
 		<div class="page-title">
 			UM {{ form.number }}
 		</div>
+        <table>
+            <tr>
+                <td style="text-align: right;">
+                    Del:
+                </td>
+                <td style="text-align: left">
+                    {{sample.from_km}} km + {{sample.from_m}} m
+                </td>
+            </tr>
+            <tr>
+                <td style="text-align: right;">
+                    Al:
+                </td>
+                <td style="text-align: left">
+                    {{sample.to_km}} km + {{sample.to_m}} m
+                </td>
+            </tr>
+        </table>
         <div v-if="loading" v-loading="true" style="height: 160px" />
         <div v-for="damage in damages" :key="damage.id" style="margin: 20px 0px" class="blue-card"
             @click="goto('/damages/'+damage.id)"

@@ -8,15 +8,15 @@
                 {{ project.name }}
         </div>
         <el-row>
-            <el-col :span="8">
+            <el-col :span="8" style="padding: 4px;">
                 <label for="L" class="input-label">L</label>
                 <el-input v-model="project.longitudcarretera" id="L" size="mini"/>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="8" style="padding: 4px;">
                 <label for="A" class="input-label">A</label>
                 <el-input v-model="project.anchoum" id="A" size="mini"/>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="8" style="padding: 4px;">
                 <label for="l" class="input-label">l</label>
                 <el-input v-model="project.longitudum" id="l" size="mini"/>
             </el-col>
@@ -53,7 +53,7 @@
             </div>
             <div style="height: 10px;" />
             <div>
-                <el-button @click="loadSamples()" icon="el-icon-refresh" circle></el-button>
+                <el-button @click="updateProject()" icon="el-icon-check" circle></el-button>
             </div>
         </div>
 
@@ -147,6 +147,34 @@ export default {
                         this.$message({
                             showClose: true,
                             message: 'Error al crear unidad de muestra',
+                            type: 'error',
+                            center: true,
+                            customClass: 'message'
+                        });
+                    }
+                }) 
+        },
+        updateProject() {
+            fetch(`${this.authBaseUrl()}/api/projects/${this.$route.params.project}/update`, {
+                method: 'POST',
+                headers: this.authHeaders(),
+                body: JSON.stringify(this.project)
+            })
+                .then(resp => {
+                    if(resp.status == 200) {
+                        this.$message({
+                            showClose: true,
+                            message: 'Guardado',
+                            type: 'success',
+                            center: true,
+                            customClass: 'message'
+                        });
+                        this.dialogVisible = false;
+                        this.loadDamages();
+                    } else {
+                        this.$message({
+                            showClose: true,
+                            message: 'Error al guardar',
                             type: 'error',
                             center: true,
                             customClass: 'message'

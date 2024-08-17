@@ -98,13 +98,11 @@ export default {
         this.loadDamages();
         let touchstartX = 0
         let touchendX = 0
-            
 
-        document.addEventListener('touchstart', e => {
+        this.$refs.car.$el.addEventListener('touchstart', e => {
             touchstartX = e.changedTouches[0].screenX
         })
-
-        document.addEventListener('touchend', e => {
+        this.$refs.car.$el.addEventListener('touchend', e => {
             touchendX = e.changedTouches[0].screenX
             if (touchendX - touchstartX > -100 ) this.$refs.car.prev();
             if (touchendX - touchstartX < 100 ) this.$refs.car.next();

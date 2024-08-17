@@ -4,39 +4,7 @@
 		<div class="page-title">
 			Resumen de Metrado de UM {{ sample.number }}
 		</div>
-    <el-table
-      :data="summary"
-      border
-      style="width: 100%; margin-top: 20px;"
-      size="mini"
-    >
-      <el-table-column
-        prop="Daño"
-        label="Daño"
-        align="center"
-        width="60"
-      ></el-table-column>
-      <el-table-column
-        prop="Severidad"
-        label="Severidad"
-        align="center"
-      ></el-table-column>
-      <el-table-column
-        prop="Total"
-        label="Total"
-        align="center"
-      ></el-table-column>
-      <el-table-column
-        prop="Densidad"
-        label="Densidad"
-        align="center"
-      ></el-table-column>
-      <el-table-column
-        prop="VD"
-        label="VD"
-        align="center"
-      ></el-table-column>
-    </el-table>
+    <table id="table" class="summary-table"></table>
 		<Navbar/>
   </div>
 </template>
@@ -82,7 +50,37 @@ export default {
                 .then(resp => resp.json()) 
                 .then(data => {
                     this.summary = data;
+                    this.createTable();
                 });
+        },
+        createTable() {
+          var data = [
+            { label: 'Daño', key: 'Daño' },
+            { label: 'Severidad', key: 'Severidad' },
+            { label: 'Total', key: 'Total' },
+            { label: 'Densidad', key: 'Densidad' },
+            { label: 'VD', key: 'VD' },
+          ]
+          var table = document.getElementById('table');
+          var head = document.createElement('tr');
+          
+          for(var elem of data) {
+            var th = document.createElement('th');
+            th.appendChild(document.createTextNode(elem.label));
+            head.appendChild(th);
+          }
+          table.appendChild(head);
+
+          for(var row of this.summary) {
+            var tr = document.createElement('tr');
+            for(var elem of data) {
+              var td = document.createElement('td');
+              td.appendChild(document.createTextNode(row[elem.key]));
+              tr.appendChild(td);
+            }
+            table.appendChild(tr);
+          }
+
         }
     }
 }
