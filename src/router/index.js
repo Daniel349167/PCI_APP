@@ -13,6 +13,10 @@ import Damages from '@/views/Damages'
 import Sheet from '@/views/Sheet'
 import DamageLists from '@/views/DamageLists'
 import DamageList from '@/views/DamageList'
+import Summaries from '@/views/Summaries'
+import MeteringSummary from '@/views/MeteringSummary'
+import DeductValuesSummary from '@/views/DeductValuesSummary'
+import PCISummary from '@/views/PCISummary'
 
 Vue.use(Router)
 
@@ -69,7 +73,7 @@ export default new Router({
       component: Sheet
     },
     {
-      path: '/results/:result',
+      path: '/results/:project',
       name: 'Result',
       component: Result
     },
@@ -82,6 +86,31 @@ export default new Router({
       path: '/damagelist/:sample',
       name: 'DamageList',
       component: DamageList
+    },
+    {
+      path: '/summaries/metering/:project',
+      name: 'Summaries',
+      component: Summaries
+    },
+    {
+      path: '/summaries/deduct/:project',
+      name: 'Summaries',
+      component: Summaries
+    },
+    {
+      path: '/summaries/metering/:project/:sample',
+      name: 'MeteringSummary',
+      component: MeteringSummary
+    },
+    {
+      path: '/summaries/deduct/:project/:sample',
+      name: 'DeductValuesSummary',
+      component: DeductValuesSummary
+    },
+    {
+      path: '/summaries/pci/:project',
+      name: 'PCISummary',
+      component: PCISummary
     }
   ]
 })

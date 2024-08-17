@@ -1,28 +1,29 @@
 <template>
     <div style="width: 90vw; margin: auto">
-		<div class="page-title">
-			PROYECTOS
-		</div>
+        <BackButton/>
+        <div class="page-title">
+            PROYECTOS
+        </div>
         <div v-if="loading" v-loading="true" style="height: 160px" />
-		<div v-for="project in projects" :key="project.id" style="margin: 20px 0px"
+        <div v-for="project in projects" :key="project.id" style="margin: 20px 0px"
             @click="goto('/projects/'+project.id)"
         >
-			<el-card>
-				<el-row>
-					<el-col :span="8">
-						<el-image :src="project.image" fit="contain"/>
-					</el-col>
-					<el-col :span="16" style="text-align: left; padding: 0px 20px">
-						<div>
-							{{ project.name }}
-						</div>
-						<div style="color: white; font-size: 12px;">
-							{{ project.time }}
-						</div>
-					</el-col>
-				</el-row>
-			</el-card>
-		</div>
+            <el-card>
+                <el-row>
+                    <el-col :span="8">
+                        <el-image :src="project.image" fit="contain"/>
+                    </el-col>
+                    <el-col :span="16" style="text-align: left; padding: 0px 20px">
+                        <div style="font-size: 16px; font-weight: bold">
+                            {{ project.name }}
+                        </div>
+                        <div style="color: white; font-size: 12px; margin-top: 3px">
+                            {{ project.time }}
+                        </div>
+                    </el-col>
+                </el-row>
+            </el-card>
+        </div>
         <div class="float">
             <el-button @click="dialogVisible = true" icon="el-icon-plus" circle></el-button>
         </div>
@@ -31,11 +32,23 @@
             title="Nuevo proyecto"
             :visible.sync="dialogVisible"
             width="90%"
-            style="margin-top: 15vh;"
+            style="margin-top: 7vh;"
         >
             <div>
                 <label for="new_project_name" class="input-label">Nombre del proyecto</label>
-                <el-input v-model="new_project_name" id="new_project_name"/>
+                <el-input v-model="form.name" id="new_project_name"/>
+            </div>
+            <div>
+                <label for="L" class="input-label"><tt>L</tt> (km)</label>
+                <el-input v-model="form.longitudcarretera" id="L" type="number" min="0"/>
+            </div>
+            <div>
+                <label for="A" class="input-label"><tt>A</tt> (m)</label>
+                <el-input v-model="form.anchoum" id="A" type="number" min="0"/>
+            </div>
+            <div>
+                <label for="l" class="input-label"><tt>l</tt> (m)</label>
+                <el-input v-model="form.longitudum" id="l" type="number" min="0"/>
             </div>
             <span slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="createProject()">Confirm</el-button>
@@ -43,25 +56,32 @@
             </span>
         </el-dialog>
 
-		<Navbar/>
+        <Navbar/>
     </div>
 </template>
 <script>
 import Navbar from '../components/Navbar.vue';
+import BackButton from '../components/BackButton.vue';
 import { auth } from "../assets/mixins/auth.js"; 
 import Moment from 'moment';
 export default {
     components: {
-        Navbar
+        Navbar,
+        BackButton
     },
-    mixins: [auth],	
+    mixins: [auth],    
     data() {
         return {
             image_not_found: require('../assets/images/not_found.png'),
             projects: [],
             loading: true,
             dialogVisible: false,
-            new_project_name: ''
+            form: {
+                name: '',
+                anchoum: 0,
+                longitudum: 0,
+                longitudcarretera: 0
+            }
         }
     },
     mounted() {
@@ -93,13 +113,31 @@ export default {
                 }); 
         },
         createProject() {
+            if(!this.form.name) {
+                this.$message({
+                    showClose: true,
+                    message: 'Introduzca el nombre del proyecto',
+                    type: 'warning',
+                    center: true,
+                    customClass: 'message'
+                });
+                return;
+            }
+            if(this.form.longitudum <= 0 || this.form.anchoum <= 0 || this.form.longitudcarretera <= 0) {
+                this.$message({
+                    showClose: true,
+                    message: 'Las distancias deben ser positivas',
+                    type: 'warning',
+                    center: true,
+                    customClass: 'message'
+                });
+                return;
+            }
+            this.form.time = Moment().format("YYYY-MM-DD hh:mm:ss");
             fetch(this.authBaseUrl()+'/api/projects', {
                 method: 'POST',
                 headers: this.authHeaders(),
-                body: JSON.stringify({
-                    'name': this.new_project_name,
-                    'time': Moment().format("YYYY-MM-DD hh:mm:ss")
-                })
+                body: JSON.stringify(this.form)
             })
                 .then(resp => {
                     if(resp.status == 200) {
@@ -128,9 +166,9 @@ export default {
 </script>
 <style scoped>
 .float {
-	position: fixed;
-	bottom: 80px;
-	right: 20px;
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
 }
 .float .el-button {
     border-color: #2ECC74;

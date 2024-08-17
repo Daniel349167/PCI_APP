@@ -22,6 +22,9 @@
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
     <platform name="android">
+        <preference name="AndroidWindowSplashScreenAnimatedIcon" value="src/assets/images/splash.png" />
+        <preference name="ShowSplashScreenSpinner" value="false"/>
+        <preference name="SplashMaintainAspectRatio" value="true"/>
         <edit-config file="app/src/main/AndroidManifest.xml" mode="merge" target="/manifest/application">
             <application android:usesCleartextTraffic="true" />
         </edit-config>

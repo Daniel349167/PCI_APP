@@ -1,5 +1,6 @@
 <template>
     <div style="width: 90vw; margin: auto">
+        <BackButton/>
 		<div class="page-title">
 			Inventario de fallas
 		</div>
@@ -75,11 +76,12 @@
 </template>
 <script>
 import Navbar from '../components/Navbar.vue';
+import BackButton from '../components/BackButton.vue';
 import { auth } from "../assets/mixins/auth.js"; 
-import Moment from 'moment';
 export default {
     components: {
-        Navbar
+        Navbar,
+        BackButton
     },
     mixins: [auth],	
     data() {
@@ -94,6 +96,17 @@ export default {
         console.log('DamageList');
         this.loadSample();
         this.loadDamages();
+        let touchstartX = 0
+        let touchendX = 0
+
+        this.$refs.car.$el.addEventListener('touchstart', e => {
+            touchstartX = e.changedTouches[0].screenX
+        })
+        this.$refs.car.$el.addEventListener('touchend', e => {
+            touchendX = e.changedTouches[0].screenX
+            if (touchendX - touchstartX > -100 ) this.$refs.car.prev();
+            if (touchendX - touchstartX < 100 ) this.$refs.car.next();
+        })
     },
     methods: {
         
@@ -122,7 +135,6 @@ export default {
                 .then(resp => resp.json()) 
                 .then(data => {
                     this.sample = data;
-                    this.sample.project = 'Proyecto 1'
                 });
         },
         async loadImages() {

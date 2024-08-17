@@ -1,5 +1,6 @@
 <template>
     <div style="width: 90vw; margin: auto">
+		<BackButton/>
 		<div class="page-title">
 			SOPORTE
 		</div>
@@ -47,9 +48,11 @@
 </template>
 <script>
 import Navbar from '../components/Navbar.vue';
+import BackButton from '../components/BackButton.vue';
 export default {
   components: {
-    Navbar
+    Navbar,
+	BackButton
   },
   data() {
     return {
@@ -80,7 +83,10 @@ export default {
             ['M', 'Falla Media'],
             ['H', 'Falla Alta'],
             ['VD', 'Valor Deducido'],
-            ['PCI', 'Índice de Condición de Pavimento']
+            ['PCI', 'Índice de Condición de Pavimento'],
+            ['L', 'Longitud de carretera'],
+            ['A', 'Ancho de unidad de muestra'],
+            ['l', 'Longitud de unidad de muestra']
         ]
     }
   },

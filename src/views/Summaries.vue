@@ -1,12 +1,12 @@
 <template>
-    <div style="width: 90vw; margin: auto" v-loading.fullscreen.lock="downloading">
+    <div style="width: 90vw; margin: auto">
         <BackButton/>
-		<div class="page-title">
-			Inventario de fallas
-		</div>
+        <div class="page-title">
+            {{ title }}
+        </div>
         <div v-if="loading" v-loading="true" style="height: 160px" />
         <div v-for="sample in samples" :key="sample.id" style="margin: 20px 0px" class="blue-card"
-            @click="goto('/damagelist/'+sample.id)"
+            @click="goto(`${$route.params.project}/${sample.id}`)"
         >
             <el-card>
                 <el-row>
@@ -27,7 +27,7 @@
         <div class="float">
             <el-button @click="downloadPDF" icon="el-icon-download" circle></el-button>
         </div>
-		<Navbar/>
+        <Navbar/>
     </div>
 </template>
 <script>
@@ -40,22 +40,26 @@ export default {
         Navbar,
         BackButton
     },
-    mixins: [auth,pdfmixin],	
+    mixins: [auth,pdfmixin],    
     data() {
         return {
             image_not_found: require('../assets/images/not_found.png'),
             samples: [],
             loading: true,
-            content: '',
-            downloading: false
+            title: ''
         }
     },
     mounted() {
-        console.log('DamageLists');
+        console.log('Summaries');
+        switch(this.$route.path.split('/')[2]) {
+        case 'metering':
+            this.title = 'Resumen de Metrado por UM'
+            break;
+        case 'deduct':
+            this.title = 'Resumen de Valores Deducidos po UM'
+            break;
+        }
         this.loadSamples();
-        console.log(content=>{
-            this.content = content;
-        });
     },
     methods: {
         goto(route) {
@@ -69,7 +73,6 @@ export default {
             })
                 .then(resp => resp.json()) 
                 .then(data => {
-                    console.dir(data);
                     this.loading = false;
                     for(var sample of data) {
                         this.samples.push({
@@ -81,36 +84,42 @@ export default {
                     }
                 }); 
         },
-        async loadDamages() {
-            for (var sample of this.samples) {
-                await fetch(`${this.authBaseUrl()}/api/samples/${sample.id}/damages`, {
+        async loadSummariesMetering(){
+            for(var sample of this.samples) {
+                await fetch(`${this.authBaseUrl()}/api/damage-measurement/${this.$route.params.project}/${sample.id}`, {
                     method: 'GET',
                     headers: this.authHeaders()
                 })
                     .then(resp => resp.json()) 
-                    .then(async (data) => {
-                        sample.damages = data;
-                        for(var damage of sample.damages) {
-                            await fetch(`${this.authBaseUrl()}/api/damages/${damage.id}/image`, {
-                                method: 'GET',
-                                headers: this.authHeaders(),
-                            })
-                                .then(resp => resp.json()) 
-                                .then(data => {
-                                    if(data.image)
-                                        damage.image = data.image;
-                                    else
-                                        damage.image = this.image_not_found;
-                                });
-                        }
-                    }); 
+                    .then(data => {
+                        sample.summary = data;
+                    });
             }
-            console.log('loadDamages end');
+        },
+        async loadSummariesDeduct(){
+            for(var sample of this.samples) {
+                await fetch(`${this.authBaseUrl()}/api/deducted-values/${this.$route.params.project}/${sample.id}`, {
+                    method: 'GET',
+                    headers: this.authHeaders()
+                })
+                    .then(resp => resp.json()) 
+                    .then(data => {
+                        sample.summary = data;
+                    });
+            }
         },
         async downloadPDF(){
             this.downloading = true;
-            await this.loadDamages();
-            await this.downloadPDFList(this.samples);
+            switch(this.$route.path.split('/')[2]) {
+            case 'metering':
+                await this.loadSummariesMetering();
+                await this.downloadPDFMetering(this.samples);
+                break;
+            case 'deduct':
+                await this.loadSummariesDeduct();
+                await this.downloadPDFDeduct(this.samples);
+                break;
+            }
             this.downloading = false;
             this.$message({
                 showClose: true,
@@ -125,14 +134,15 @@ export default {
 </script>
 <style>
 .float {
-	position: fixed;
-	bottom: 80px;
-	right: 20px;
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
 }
 .float .el-button {
     border-color: #2C39A994;
     border-width: 3px;
     color: #2C39A994;
+    font-size: 24px;
 }
 .blue-card .el-card__body  {
     background-color: #2C39A994;
