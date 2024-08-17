@@ -5,9 +5,9 @@
 			HOJA DE RELEVAMIENTO
 		</div>
 		<div class="page-title">
-			UM {{ form.number }}
+			UM {{ sample.number }}
 		</div>
-        <table>
+        <table style="margin: 0px auto">
             <tr>
                 <td style="text-align: right;">
                     Del:
@@ -69,7 +69,7 @@ export default {
             image_not_found: require('../assets/images/not_found.png'),
             damages: [],
             loading: true,
-            form: {}
+            sample: {}
         }
     },
     mounted() {
@@ -109,7 +109,7 @@ export default {
             })
                 .then(resp => resp.json()) 
                 .then(data => {
-                    this.form = data;
+                    this.sample = data;
                 });
         },
         createDamage() {
@@ -147,7 +147,7 @@ export default {
             fetch(`${this.authBaseUrl()}/api/samples/${this.$route.params.sample}/update`, {
                 method: 'POST',
                 headers: this.authHeaders(),
-                body: JSON.stringify(this.form)
+                body: JSON.stringify(this.sample)
             })
                 .then(resp => {
                     if(resp.status == 200) {
