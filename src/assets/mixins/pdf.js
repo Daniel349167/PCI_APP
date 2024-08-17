@@ -138,8 +138,7 @@ export const pdfmixin = {
             return content;
         },
         MeteringSummaryTemplate(summary) {
-            // var content = '<head><link rel="stylesheet" href="file:///android_asset/www/"></head>'; 
-            var content = '<body style="font-size: 60px">';
+            var content = this.tableStyle() + '<body style="font-size: 60px">';
             var data = [
                 { label: 'N°', key: 'id' },
                 { label: 'Tipo falla', key: 'tipo_falla' },
@@ -171,7 +170,7 @@ export const pdfmixin = {
             return content;
         },
         DeductSummaryTemplate(summary) {
-            var content = '<body style="font-size: 60px">'
+            var content = this.tableStyle() + '<body style="font-size: 60px">'
             var data = [
                 { label: 'Daño', key: 'Daño' },
                 { label: 'Severidad', key: 'Severidad' },
@@ -203,6 +202,17 @@ export const pdfmixin = {
             content += table.outerHTML;
             content += '</body>';
             return content;
+        },
+        tableStyle() {
+            return `
+                <head>
+                    <style>
+                        table { padding: 10px 0px; width: 100%; border-spacing: 0 4px; text-align: center; }
+                        table tr:nth-child(1) { background-color: #D9D9D9; }
+                        table tr { height: 36px; background-color: #2ECC74; }
+                    </style>
+                </head>
+            `
         }
     }
 }
