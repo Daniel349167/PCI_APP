@@ -102,38 +102,28 @@ export const pdfmixin = {
             });
         },
         damageListTemplate(sample) {
-            var content = '<body style="font-size: 60px">'
+            var content = this.tableStyle() + '<body style="font-size: 60px">';
             for (var damage of sample.damages) {
                 content += `
                     <div style="height: 1000px; padding: 50px">
                         <img style="width: 100%; min-height: 100px; max-height: 600px" src="${damage.image}">
-                        <div style="margin-top: 20px">
-                            <span style="font-weight: bold">
-                                Tipo:
-                            </span>
-                            <span>
-                                ${damage.type ? damage.type : ''}
-                            </span>
-                        </div>
-                        <div>
-                            <span style="font-weight: bold">
-                                Severidad:
-                            </span>
-                            <span>
-                                ${damage.severity ? ['', 'L', 'M', 'H'][damage.severity] : ''}
-                            </span>
-                        </div>
-                        <div>
-                            <span style="font-weight: bold">
-                                Cantidad:
-                            </span>
-                            <span>
-                                ${damage.amount ? damage.amount : ''}
-                            </span>
-                        </div>
+                        <table>
+                            <tr>
+                                <th>Tipo</th>
+                                <th>Severidad</th>
+                                <th>Cantidad</th>
+                            </tr>
+                            <tr style="background-color: #FFFFFF;">
+                                <td>${damage.type ? damage.type : ''}</td>
+                                <td>${damage.severity ? ['', 'L', 'M', 'H'][damage.severity] : ''}</td>
+                                <td>${damage.amount ? damage.amount : ''}</td>
+                            </tr>
+                        </table>
                     </div>
                 `
             }
+            
+
             content += '</body>'
             return content;
         },
