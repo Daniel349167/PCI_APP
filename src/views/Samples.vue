@@ -7,18 +7,15 @@
         <div class="page-title">
                 {{ project.name }}
         </div>
-        <el-row>
-            <el-col :span="8" style="padding: 4px;">
-                <label for="L" class="input-label">L</label>
-                <el-input v-model="project.longitudcarretera" id="L" size="mini"/>
+        <el-row style="margin-top: 10px">
+            <el-col :span="8">
+                <tt>L</tt>: {{ project.longitudcarretera }}
             </el-col>
-            <el-col :span="8" style="padding: 4px;">
-                <label for="A" class="input-label">A</label>
-                <el-input v-model="project.anchoum" id="A" size="mini"/>
+            <el-col :span="8">
+                <tt>A</tt>: {{ project.anchoum }}
             </el-col>
-            <el-col :span="8" style="padding: 4px;">
-                <label for="l" class="input-label">l</label>
-                <el-input v-model="project.longitudum" id="l" size="mini"/>
+            <el-col :span="8">
+                <tt>l</tt>: {{ project.longitudum }}
             </el-col>
         </el-row>
         <div v-if="loading" v-loading="true" style="height: 160px" />
@@ -47,17 +44,7 @@
                 </el-row>
             </el-card>
         </div>
-        <div class="float">
-            <div>
-                <el-button @click="createSample()" icon="el-icon-plus" circle></el-button>
-            </div>
-            <div style="height: 10px;" />
-            <div>
-                <el-button @click="updateProject()" icon="el-icon-check" circle></el-button>
-            </div>
-        </div>
-
-                <Navbar/>
+        <Navbar/>
     </div>
 </template>
 <script>

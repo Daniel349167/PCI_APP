@@ -1,5 +1,5 @@
 <template>
-    <div style="width: 90vw; margin: auto">
+    <div style="width: 90vw; margin: auto" v-loading.fullscreen.lock="downloading">
         <BackButton/>
         <div class="page-title">
             {{ title }}
@@ -46,6 +46,7 @@ export default {
             image_not_found: require('../assets/images/not_found.png'),
             samples: [],
             loading: true,
+            downloading: false,
             title: ''
         }
     },

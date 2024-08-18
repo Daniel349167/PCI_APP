@@ -50,6 +50,12 @@
                 <label for="l" class="input-label"><tt>l</tt> (m)</label>
                 <el-input v-model="form.longitudum" id="l" type="number" min="0"/>
             </div>
+            <div v-if="goodAl" style="text-align: left; height: 0px; margin-top: 10px">
+                <tt>A*l = {{ form.anchoum*form.longitudum }}m²</tt>
+            </div>
+            <div v-else style="text-align: left; height: 0px; margin-top: 10px; color: red">
+                <tt>A*l = {{ form.anchoum*form.longitudum }}m²</tt>
+            </div>
             <span slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="createProject()">Confirm</el-button>
                 <el-button @click="dialogVisible = false">Cancel</el-button>
@@ -78,15 +84,20 @@ export default {
             dialogVisible: false,
             form: {
                 name: '',
-                anchoum: 0,
-                longitudum: 0,
-                longitudcarretera: 0
+                anchoum: null,
+                longitudum: null,
+                longitudcarretera: null
             }
         }
     },
     mounted() {
         console.log('Projects');
         this.loadProjects()
+    },
+    computed: {
+        goodAl() {
+            return this.form.longitudum*this.form.anchoum >= 135 && this.form.longitudum*this.form.anchoum <= 315;
+        }
     },
     methods: {
         goto(route) {
@@ -127,6 +138,16 @@ export default {
                 this.$message({
                     showClose: true,
                     message: 'Las distancias deben ser positivas',
+                    type: 'warning',
+                    center: true,
+                    customClass: 'message'
+                });
+                return;
+            }
+            if(!this.goodAl) {
+                this.$message({
+                    showClose: true,
+                    message: 'A*l debe valer entre 135 y 315',
                     type: 'warning',
                     center: true,
                     customClass: 'message'

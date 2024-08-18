@@ -26,7 +26,7 @@
                 </el-col>
             </el-row>
         </div>
-        <el-image :src="form.image" fit="contain" v-if="form.image"/>
+        <el-image :src="form.image" fit="contain" v-if="form.image" ref="image"/>
         <el-row style="position: fixed; bottom: 80px; left: 0; width: 100%;">
             <el-col :span="12">
                 <el-button icon="el-icon-camera" @click="camera()" style="font-size: 24px"></el-button>
@@ -74,7 +74,7 @@ export default {
                 async function(event) { 
                     console.log('getPicture');
                     self.form.image = 'data:image/jpg;base64,' + event;
-                    self.form.type = self.form.type++;
+                    self.$forceUpdate();
                 },
                 function(event) { 
                     console.log('Error')
@@ -154,7 +154,7 @@ export default {
                 .then(resp => resp.json()) 
                 .then(data => {
                     this.form.image = data.image;
-                    this.form.type = this.form.type++;
+                    this.$forceUpdate();
                 });
         }
     }
