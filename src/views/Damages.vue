@@ -89,7 +89,6 @@ export default {
             })
                 .then(resp => resp.json()) 
                 .then(data => {
-                    console.dir(data);
                     this.loading = false;
                     for(var damage of data) {
                         this.damages.push({

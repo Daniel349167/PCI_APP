@@ -4,6 +4,8 @@ export const pdfmixin = {
     methods: {
         async downloadPDFList(samples) {
             for(var sample of samples) {
+                if(sample.damages.length == 0)
+                    continue;
                 var opts = {
                     documentSize: 'A4',
                     fileName: `PCI_Fallas_${Moment().format("YYYY_MM_DD_hh_mm_ss")}_UM${sample.number}.pdf`,
@@ -22,6 +24,8 @@ export const pdfmixin = {
         },
         async downloadPDFMetering(samples) {
             for(var sample of samples) {
+                if(sample.summary.length == 0)
+                    continue;
                 var opts = {
                     documentSize: 'A4',
                     fileName: `PCI_Metrado_${Moment().format("YYYY_MM_DD_hh_mm_ss")}_UM${sample.number}.pdf`,
@@ -40,6 +44,8 @@ export const pdfmixin = {
         },
         async downloadPDFDeduct(samples) {
             for(var sample of samples) {
+                if(sample.summary.length == 0)
+                    continue;
                 var opts = {
                     documentSize: 'A4',
                     fileName: `PCI_VD_${Moment().format("YYYY_MM_DD_hh_mm_ss")}_UM${sample.number}.pdf`,
@@ -229,6 +235,8 @@ export const pdfmixin = {
             table.appendChild(head);
 
             for(var row of summary) {
+                if(!row.n_daños)
+                  continue;
                 var tr = document.createElement('tr');
                 for(var elem of data) {
                     var td = document.createElement('td');

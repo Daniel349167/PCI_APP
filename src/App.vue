@@ -10,7 +10,6 @@ export default {
   name: 'app',
   mounted() {
     console.log('App');
-    console.dir(this.$router);
   }
 }
 </script>

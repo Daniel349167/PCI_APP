@@ -59,6 +59,7 @@
 
 export default {
   name: 'Navbar',
+  props: ['resultId'],
   data () {
     return {
         img: {
@@ -71,6 +72,10 @@ export default {
   },
   methods: {
     goto(route) {
+        if(this.resultId && route == '/results') {
+            this.$router.push('/results/'+this.resultId);
+            return;
+        }
         switch(route) {
         case '/home':
         case '/projects':

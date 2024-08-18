@@ -6,7 +6,7 @@
 		</div>
         <div v-if="loading" v-loading="true" style="height: 160px" />
         <div v-for="sample in samples" :key="sample.id" style="margin: 20px 0px" class="blue-card"
-            @click="goto('/damagelist/'+sample.id)"
+            @click="goto($route.params.project+'/'+sample.id)"
         >
             <el-card>
                 <el-row>
@@ -27,7 +27,7 @@
         <div class="float">
             <el-button @click="downloadPDF" icon="el-icon-download" circle></el-button>
         </div>
-		<Navbar/>
+		<Navbar :resultId="$route.params.project"/>
     </div>
 </template>
 <script>
@@ -69,7 +69,6 @@ export default {
             })
                 .then(resp => resp.json()) 
                 .then(data => {
-                    console.dir(data);
                     this.loading = false;
                     for(var sample of data) {
                         this.samples.push({

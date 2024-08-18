@@ -57,7 +57,6 @@ export default {
           .then(resp => resp.json()) 
           .then(data => {
             console.log('logout');
-            console.dir(data)
             localStorage.removeItem("api_token");
             this.$router.push('/login');
           });
