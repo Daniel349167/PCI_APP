@@ -67,8 +67,6 @@ export default {
         camera() {
             if(!window.navigator)
                 return;
-            console.log('navigator');
-            console.dir(navigator);
             const self = this;
             navigator.camera.getPicture(
                 async function(event) { 
@@ -78,7 +76,6 @@ export default {
                 },
                 function(event) { 
                     console.log('Error')
-                    console.dir(event);
                 },
                 {
                     sourceType: Camera.PictureSourceType.CAMERA,

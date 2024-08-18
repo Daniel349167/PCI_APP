@@ -83,7 +83,7 @@ export default new Router({
       component: DamageLists
     },
     {
-      path: '/damagelist/:sample',
+      path: '/damagelists/:project/:sample',
       name: 'DamageList',
       component: DamageList
     },

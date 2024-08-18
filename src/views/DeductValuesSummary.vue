@@ -5,7 +5,7 @@
 			Resumen de Metrado de UM {{ sample.number }}
 		</div>
     <table id="table" class="summary-table"></table>
-		<Navbar/>
+		<Navbar :resultId="$route.params.project"/>
   </div>
 </template>
 <script>

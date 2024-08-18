@@ -8,7 +8,7 @@
     <div class="float">
         <el-button @click="downloadPDF" icon="el-icon-download" circle></el-button>
     </div>
-    <Navbar/>
+		<Navbar :resultId="$route.params.project"/>
   </div>
 </template>
 <script>
@@ -71,6 +71,8 @@ export default {
           table.appendChild(head);
 
           for(var row of this.summary) {
+            if(!row.n_daños)
+              continue;
             var tr = document.createElement('tr');
             for(var elem of data) {
               var td = document.createElement('td');
@@ -90,7 +92,6 @@ export default {
             tr.style.backgroundColor = '#2C39A982'
             table.appendChild(tr);
           }
-          console.log(table.outerHTML);
         },
         async downloadPDF(){
           this.downloading = true;

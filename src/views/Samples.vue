@@ -91,7 +91,6 @@ export default {
             })
                 .then(resp => resp.json()) 
                 .then(data => {
-                    console.dir(data);
                     this.loading = false;
                     for(var sample of data) {
                         this.samples.push({

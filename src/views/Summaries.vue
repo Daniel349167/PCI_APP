@@ -27,7 +27,7 @@
         <div class="float">
             <el-button @click="downloadPDF" icon="el-icon-download" circle></el-button>
         </div>
-        <Navbar/>
+		<Navbar :resultId="$route.params.project"/>
     </div>
 </template>
 <script>
@@ -57,7 +57,7 @@ export default {
             this.title = 'Resumen de Metrado por UM'
             break;
         case 'deduct':
-            this.title = 'Resumen de Valores Deducidos po UM'
+            this.title = 'Resumen de Valores Deducidos por UM'
             break;
         }
         this.loadSamples();

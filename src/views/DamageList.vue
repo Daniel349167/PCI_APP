@@ -71,7 +71,7 @@
                 </el-table>
             </el-carousel-item>
         </el-carousel>
-        <Navbar/>
+		<Navbar :resultId="$route.params.project"/>
     </div>
 </template>
 <script>

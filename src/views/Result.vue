@@ -40,10 +40,6 @@ export default {
     },
     created() {
         console.log('created');
-        document.addEventListener("deviceready", function() {
-            console.log('navigator');
-            console.dir(navigator);
-        }, false);
         
         fetch(`${this.authBaseUrl()}/api/projects/${this.$route.params.project}`, {
             method: 'GET',

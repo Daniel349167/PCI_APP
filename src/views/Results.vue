@@ -48,7 +48,7 @@ export default {
         }
     },
     mounted() {
-        console.log('Projects');
+        console.log('Results');
         this.loadProjects()
     },
     methods: {
@@ -63,7 +63,6 @@ export default {
             })
                 .then(resp => resp.json()) 
                 .then(data => {
-                    console.dir(data);
                     this.loading = false;
                     for(var project of data) {
                         this.projects.push({
