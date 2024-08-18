@@ -56,6 +56,22 @@ export const pdfmixin = {
                     .catch((error) => console.log(error));
             }
         },
+        async downloadPDFPCI(summary, project_name) {
+            var opts = {
+                documentSize: 'A4',
+                fileName: `PCI_${Moment().format("YYYY_MM_DD_hh_mm_ss")}.pdf`,
+                type: 'base64'
+            }
+            var template = this.PCISummaryTemplate(summary, project_name);
+            await pdf.fromData(template, opts)
+                .then((base64) => {
+                    var contentType = "application/pdf";
+                    var foldername = 'PCI';
+                    console.log(opts.fileName);
+                    this.savebase64AsPDF(foldername, opts.fileName, base64, contentType);  
+                })
+                .catch((error) => console.log(error));
+        },
         b64toBlob(b64Data, contentType, sliceSize) {
             contentType = contentType || '';
             sliceSize = sliceSize || 512;
@@ -122,7 +138,6 @@ export const pdfmixin = {
                     </div>
                 `
             }
-            
 
             content += '</body>'
             return content;
@@ -160,7 +175,7 @@ export const pdfmixin = {
             return content;
         },
         DeductSummaryTemplate(summary) {
-            var content = this.tableStyle() + '<body style="font-size: 60px">'
+            var content = this.tableStyle() + '<body style="font-size: 60px">';
             var data = [
                 { label: 'Daño', key: 'Daño' },
                 { label: 'Severidad', key: 'Severidad' },
@@ -187,6 +202,50 @@ export const pdfmixin = {
                 td.appendChild(document.createTextNode(row[elem.key]));
                 tr.appendChild(td);
                 }
+                table.appendChild(tr);
+            }
+            content += table.outerHTML;
+            content += '</body>';
+            return content;
+        },
+        PCISummaryTemplate(summary, project_name) {
+            var content = this.tableStyle() + '<body style="font-size: 60px">';
+            content += `<h4 style="margin: 20px; text-align: center">${ project_name }</h4>`;
+            var data = [
+                { label: 'UM', key: 'UM'},
+                { label: 'Del', key: 'Del'},
+                { label: 'Al', key: 'Al'},
+                { label: 'PCI', key: 'PCI'},
+                { label: 'Condición', key: 'Condición'},
+            ]
+            var table = document.createElement('table');
+            var head = document.createElement('tr');
+            
+            for(var elem of data) {
+                var th = document.createElement('th');
+                th.appendChild(document.createTextNode(elem.label));
+                head.appendChild(th);
+            }
+            table.appendChild(head);
+
+            for(var row of summary) {
+                var tr = document.createElement('tr');
+                for(var elem of data) {
+                    var td = document.createElement('td');
+                    td.appendChild(document.createTextNode(row[elem.key]));
+                    if(elem.key=='Condición')
+                        td.style.backgroundColor = {
+                            'Excelente': '#28B45E',
+                            'Muy bueno': '#79C142',
+                            'Bueno': '#EBE723',
+                            'Regular': '#EE2E2E',
+                            'Pobre': '#C22026',
+                            'Muy pobre': '#7A1315',
+                            'Fallado': '#D9D9D9'
+                        }[row['Condición']];
+                    tr.appendChild(td);
+                }
+                tr.style.backgroundColor = '#2C39A982'
                 table.appendChild(tr);
             }
             content += table.outerHTML;

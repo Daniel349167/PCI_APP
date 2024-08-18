@@ -1,10 +1,13 @@
 <template>
-  <div>
+  <div v-loading.fullscreen.lock="downloading">
     <BackButton/>
 		<div class="page-title">
 			Resumen de PCI de {{ project_name }}
 		</div>
     <table id="table" class="summary-table pci-table"></table>
+    <div class="float">
+        <el-button @click="downloadPDF" icon="el-icon-download" circle></el-button>
+    </div>
     <Navbar/>
   </div>
 </template>
@@ -12,19 +15,21 @@
 import Navbar from '../components/Navbar.vue';
 import BackButton from '../components/BackButton.vue';
 import { auth } from "../assets/mixins/auth.js"; 
+import { pdfmixin } from '../assets/mixins/pdf.js';
 export default {
     components: {
         Navbar,
         BackButton
     },
-    mixins: [auth],	
+    mixins: [auth,pdfmixin],	
     data() {
         return {
             image_not_found: require('../assets/images/not_found.png'),
             project_name: '\xa0',
             loading: true,
             sample: {},
-            summary: [{}]
+            summary: [{}],
+            downloading: false
         }
     },
     mounted() {
@@ -86,7 +91,35 @@ export default {
             table.appendChild(tr);
           }
           console.log(table.outerHTML);
+        },
+        async downloadPDF(){
+          this.downloading = true;
+          await this.downloadPDFPCI(this.summary, this.project_name);
+          this.downloading = false;
+          this.$message({
+              showClose: true,
+              message: 'Archivo descargado',
+              type: 'success',
+              center: true,
+              customClass: 'message'
+          });
         }
     }
 }
 </script>
+<style>
+.float {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+}
+.float .el-button {
+    border-color: #2C39A994;
+    border-width: 3px;
+    color: #2C39A994;
+    font-size: 24px;
+}
+.blue-card .el-card__body  {
+    background-color: #2C39A994;
+}
+</style>
