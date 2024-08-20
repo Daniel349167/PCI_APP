@@ -71,8 +71,8 @@ export default {
           table.appendChild(head);
 
           for(var row of this.summary) {
-            if(!row.n_daños)
-              continue;
+            // if(!row.n_daños)
+            //   continue;
             var tr = document.createElement('tr');
             for(var elem of data) {
               var td = document.createElement('td');
