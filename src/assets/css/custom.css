@@ -28,6 +28,9 @@
 .el-card__body {
     background-color: #2ECC74;
 }
+.delete-card .el-card__body {
+    background-color: #E63535 !important;
+}
 
 .message {
     min-width: 0px;

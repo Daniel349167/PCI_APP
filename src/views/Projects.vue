@@ -5,27 +5,57 @@
             PROYECTOS
         </div>
         <div v-if="loading" v-loading="true" style="height: 160px" />
-        <div v-for="project in projects" :key="project.id" style="margin: 20px 0px"
-            @click="goto('/projects/'+project.id)"
-        >
-            <el-card>
-                <el-row>
-                    <el-col :span="8">
-                        <el-image :src="project.image" fit="contain"/>
-                    </el-col>
-                    <el-col :span="16" style="text-align: left; padding: 0px 20px">
-                        <div style="font-size: 16px; font-weight: bold">
-                            {{ project.name }}
-                        </div>
-                        <div style="color: white; font-size: 12px; margin-top: 3px">
-                            {{ project.time }}
-                        </div>
-                    </el-col>
-                </el-row>
-            </el-card>
+        <div v-if="!delete_mode">
+            <div v-for="project in projects" :key="project.id" style="margin: 20px 0px"
+                @click="goto('/projects/'+project.id)"
+            >
+                <el-card>
+                    <el-row>
+                        <el-col :span="8">
+                            <el-image :src="project.image" fit="contain"/>
+                        </el-col>
+                        <el-col :span="16" style="text-align: left; padding: 0px 20px">
+                            <div style="font-size: 16px; font-weight: bold">
+                                {{ project.name }}
+                            </div>
+                            <div style="color: white; font-size: 12px; margin-top: 3px">
+                                {{ project.time }}
+                            </div>
+                        </el-col>
+                    </el-row>
+                </el-card>
+            </div>
         </div>
-        <div class="float">
+        <div v-else>
+            <div v-for="project in projects" :key="project.id" style="margin: 20px 0px"
+                @click="delete_project_id = project.id"
+            >
+                <el-card class="delete-card">
+                    <el-row>
+                        <el-col :span="8">
+                            <el-image :src="project.image" fit="contain"/>
+                        </el-col>
+                        <el-col :span="16" style="text-align: left; padding: 0px 20px">
+                            <div style="font-size: 16px; font-weight: bold">
+                                {{ project.name }}
+                            </div>
+                            <div style="color: white; font-size: 12px; margin-top: 3px">
+                                {{ project.time }}
+                            </div>
+                        </el-col>
+                    </el-row>
+                </el-card>
+            </div>
+        </div>
+        <div class="float" v-if="!delete_mode">
             <el-button @click="dialogVisible = true" icon="el-icon-plus" circle></el-button>
+            <div style="height: 10px;" />
+            <el-button @click="delete_mode = true" icon="el-icon-delete" circle></el-button>
+        </div>
+        <div class="float delete-buttons" v-else>
+            <el-button @click="dialogVisible = true" icon="el-icon-plus" circle></el-button>
+            <div style="height: 10px;" />
+            <el-button @click="delete_mode = false" icon="el-icon-delete" circle></el-button>
         </div>
 
         <el-dialog
@@ -61,6 +91,17 @@
                 <el-button @click="dialogVisible = false">Cancel</el-button>
             </span>
         </el-dialog>
+        <el-dialog
+            :visible="delete_project_id != null"
+            width="80%"
+            style="margin-top: 20vh;"
+        >
+            <span>¿Eliminar proyecto?</span>
+            <span slot="footer" class="dialog-footer">
+            <el-button @click="delete_project_id = null">No</el-button>
+            <el-button type="primary" @click="deleteProject(delete_project_id)">Sí</el-button>
+            </span>
+        </el-dialog>
 
         <Navbar/>
     </div>
@@ -87,7 +128,9 @@ export default {
                 anchoum: null,
                 longitudum: null,
                 longitudcarretera: null
-            }
+            },
+            delete_mode: false,
+            delete_project_id: null,
         }
     },
     mounted() {
@@ -180,6 +223,32 @@ export default {
                         });
                     }
                 }) 
+        },
+        deleteProject(id) {
+            fetch(this.authBaseUrl()+'/api/projects/' + id, {
+                method: 'DELETE',
+                headers: this.authHeaders()
+            })
+                .then(resp => {
+                    this.$message({
+                        showClose: true,
+                        message: 'Proyecto eliminado',
+                        type: 'success',
+                        center: true,
+                        customClass: 'message'
+                    });
+                    this.loadProjects();
+                })
+                .catch(err => {
+                    this.$message({
+                        showClose: true,
+                        message: 'Error al eliminar proyecto',
+                        type: 'error',
+                        center: true,
+                        customClass: 'message'
+                    });
+                });
+            this.delete_project_id = null;
         }
     }
 }
@@ -194,6 +263,12 @@ export default {
     border-color: #2ECC74;
     border-width: 3px;
     color: #2ECC74;
+    font-size: 24px;
+}
+.float.delete-buttons .el-button {
+    border-color: #E63535;
+    border-width: 3px;
+    color: #E63535;
     font-size: 24px;
 }
 </style>

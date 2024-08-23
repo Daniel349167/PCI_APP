@@ -27,7 +27,7 @@
         </table>
         <div v-if="loading" v-loading="true" style="height: 160px" />
         <div v-for="damage in damages" :key="damage.id" style="margin: 20px 0px" class="blue-card"
-            @click="goto('/damages/'+damage.id)"
+            @click="deleteDamage(damage.id)"
         >
             <el-card>
                 <el-row>
@@ -182,6 +182,14 @@ export default {
                             damage.image = data.image;
                     });
             }
+        },
+        deleteDamage(id) {
+            fetch(this.authBaseUrl()+'/api/damages/' + id, {
+                method: 'DELETE',
+                headers: this.authHeaders()
+            })
+                .then(resp => resp.json()) 
+                .then(resp => console.dir(resp));
         }
     }
 }
