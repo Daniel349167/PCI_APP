@@ -27,9 +27,9 @@
         </table>
         <div v-if="loading" v-loading="true" style="height: 160px" />
         <div v-for="damage in damages" :key="damage.id" style="margin: 20px 0px" class="blue-card"
-            @click="deleteDamage(damage.id)"
+            @click="delete_mode ? (delete_damage_id = damage.id) : goto('/damages/'+damage.id)"
         >
-            <el-card>
+            <el-card :class="delete_mode ? 'delete-card' : ''">
                 <el-row>
                     <el-col :span="8">
                         <el-image :src="damage.image" fit="contain"/>
@@ -45,11 +45,25 @@
                 </el-row>
             </el-card>
         </div>
-        <div class="float">
-            <div>
-                <el-button @click="createDamage()" icon="el-icon-plus" circle></el-button>
-            </div>
+        <div class="float" v-if="!delete_mode">
+            <el-button @click="createDamage()" icon="el-icon-plus" circle></el-button>
+            <div style="height: 10px;" />
+            <el-button @click="delete_mode = true" icon="el-icon-delete" circle></el-button>
         </div>
+        <div class="float delete-buttons" v-else>
+            <el-button @click="delete_mode = false" icon="el-icon-close" circle></el-button>
+        </div>
+        <el-dialog
+            :visible="delete_damage_id != null"
+            width="80%"
+            style="margin-top: 20vh;"
+        >
+            <span>¿Eliminar daño?</span>
+            <span slot="footer" class="dialog-footer">
+            <el-button @click="delete_damage_id = null">No</el-button>
+            <el-button type="primary" @click="deleteDamage(delete_damage_id)">Sí</el-button>
+            </span>
+        </el-dialog>
 		<Navbar/>
     </div>
 </template>
@@ -69,7 +83,9 @@ export default {
             image_not_found: require('../assets/images/not_found.png'),
             damages: [],
             loading: true,
-            sample: {}
+            sample: {},
+            delete_mode: false,
+            delete_damage_id: null
         }
     },
     mounted() {
@@ -116,7 +132,7 @@ export default {
                 method: 'POST',
                 headers: this.authHeaders(),
                 body: JSON.stringify({
-                    'number': this.damages.length+1,
+                    'number': this.damages[this.damages.length-1].number+1,
                     'time': Moment().format("YYYY-MM-DD hh:mm:ss")
                 })
             })
@@ -188,8 +204,28 @@ export default {
                 method: 'DELETE',
                 headers: this.authHeaders()
             })
-                .then(resp => resp.json()) 
-                .then(resp => console.dir(resp));
+                .then(resp => {
+                    if(resp.status == 200) {
+                        this.$message({
+                            showClose: true,
+                            message: 'Daño eliminado',
+                            type: 'success',
+                            center: true,
+                            customClass: 'message'
+                        });
+                        this.dialogVisible = false;
+                        this.loadDamages();
+                    } else {
+                        this.$message({
+                            showClose: true,
+                            message: 'Error al eliminar daño',
+                            type: 'error',
+                            center: true,
+                            customClass: 'message'
+                        });
+                    }
+                });
+            this.delete_damage_id = null;
         }
     }
 }
@@ -208,5 +244,10 @@ export default {
 }
 .blue-card .el-card__body  {
     background-color: #2C39A994;
+}
+
+.float.delete-buttons .el-button {
+    border-color: #E63535;
+    color: #E63535;
 }
 </style>
