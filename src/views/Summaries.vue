@@ -1,5 +1,5 @@
 <template>
-    <div style="width: 90vw; margin: auto" v-loading.fullscreen.lock="downloading">
+    <div style="width: 90vw; margin: auto" v-loading.fullscreen.lock="downloading" :element-loading-text="Math.floor(loadSummariesProgess*100)+'%'">
         <BackButton/>
         <div class="page-title">
             {{ title }}
@@ -46,6 +46,7 @@ export default {
             image_not_found: require('../assets/images/not_found.png'),
             samples: [],
             loading: true,
+            loadSummariesProgess: 0,
             downloading: false,
             title: ''
         }
@@ -86,6 +87,7 @@ export default {
                 }); 
         },
         async loadSummariesMetering(){
+            this.loadSummariesProgess = 0;
             for(var sample of this.samples) {
                 await fetch(`${this.authBaseUrl()}/api/damage-measurement/${this.$route.params.project}/${sample.id}`, {
                     method: 'GET',
@@ -94,10 +96,12 @@ export default {
                     .then(resp => resp.json()) 
                     .then(data => {
                         sample.summary = data;
+                        this.loadSummariesProgess += 1/this.samples.length;
                     });
             }
         },
         async loadSummariesDeduct(){
+            this.loadSummariesProgess = 0;
             for(var sample of this.samples) {
                 await fetch(`${this.authBaseUrl()}/api/deducted-values/${this.$route.params.project}/${sample.id}`, {
                     method: 'GET',
@@ -106,6 +110,7 @@ export default {
                     .then(resp => resp.json()) 
                     .then(data => {
                         sample.summary = data;
+                        this.loadSummariesProgess += 1/this.samples.length;
                     });
             }
         },

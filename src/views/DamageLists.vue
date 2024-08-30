@@ -1,5 +1,5 @@
 <template>
-    <div style="width: 90vw; margin: auto" v-loading.fullscreen.lock="downloading">
+    <div style="width: 90vw; margin: auto" v-loading.fullscreen.lock="downloading" :element-loading-text="Math.floor(loadDamagesProgess*100)+'%'">
         <BackButton/>
 		<div class="page-title">
 			Inventario de fallas
@@ -47,6 +47,7 @@ export default {
             samples: [],
             loading: true,
             content: '',
+            loadDamagesProgess: 0,
             downloading: false
         }
     },
@@ -81,6 +82,7 @@ export default {
                 }); 
         },
         async loadDamages() {
+            this.loadDamagesProgess = 0;
             for (var sample of this.samples) {
                 await fetch(`${this.authBaseUrl()}/api/samples/${sample.id}/damages`, {
                     method: 'GET',
@@ -89,6 +91,8 @@ export default {
                     .then(resp => resp.json()) 
                     .then(async (data) => {
                         sample.damages = data;
+                        if(sample.damages.length==0)
+                            this.loadDamagesProgess += 1/this.samples.length;
                         for(var damage of sample.damages) {
                             await fetch(`${this.authBaseUrl()}/api/damages/${damage.id}/image`, {
                                 method: 'GET',
@@ -100,6 +104,7 @@ export default {
                                         damage.image = data.image;
                                     else
                                         damage.image = this.image_not_found;
+                                    this.loadDamagesProgess += 1/this.samples.length/sample.damages.length;
                                 });
                         }
                     }); 
