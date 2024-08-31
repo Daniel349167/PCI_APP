@@ -128,11 +128,14 @@ export default {
                 });
         },
         createDamage() {
+            var number = 1;
+            if(this.damages.length>0)
+                number = this.damages[this.damages.length-1].number+1;
             fetch(this.authBaseUrl()+'/api/damages/' + this.$route.params.sample, {
                 method: 'POST',
                 headers: this.authHeaders(),
                 body: JSON.stringify({
-                    'number': this.damages[this.damages.length-1].number+1,
+                    'number': number,
                     'time': Moment().format("YYYY-MM-DD hh:mm:ss")
                 })
             })
@@ -140,7 +143,7 @@ export default {
                     if(resp.status == 200) {
                         this.$message({
                             showClose: true,
-                            message: 'Hoja creada',
+                            message: 'Daño creado',
                             type: 'success',
                             center: true,
                             customClass: 'message'

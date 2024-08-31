@@ -54,4 +54,13 @@
 
 .el-carousel__arrow {
     top: calc(50% - 70px);
+    background-color: rgba(31, 45, 61, .5);
+}
+.el-carousel__arrow:hover {
+    background-color: rgba(31, 45, 61, .5);
+}
+.el-carousel__arrow--left {
+    left: 0px;
+}.el-carousel__arrow--right {
+    right: 0px;
 }
