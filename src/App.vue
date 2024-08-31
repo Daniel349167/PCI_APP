@@ -5,11 +5,14 @@
 </template>
 
 <script>
+import { sqlite } from './assets/mixins/sqlite.js';
 
 export default {
   name: 'app',
+  mixins: [sqlite],
   mounted() {
     console.log('App');
+    this.sqliteInit();
   }
 }
 </script>

@@ -87,13 +87,14 @@
 import Navbar from '../components/Navbar.vue';
 import BackButton from '../components/BackButton.vue';
 import { auth } from "../assets/mixins/auth.js"; 
+import { sqlite } from '../assets/mixins/sqlite.js';
 import Moment from 'moment';
 export default {
     components: {
         Navbar,
         BackButton
     },
-    mixins: [auth],    
+    mixins: [auth, sqlite],    
     data() {
         return {
             image_not_found: require('../assets/images/not_found.png'),
@@ -113,6 +114,7 @@ export default {
     mounted() {
         console.log('Projects');
         this.loadProjects()
+        this.sqliteTest();
     },
     computed: {
         goodAl() {
