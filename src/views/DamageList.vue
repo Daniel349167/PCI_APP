@@ -40,7 +40,7 @@
             </tr>
         </table>
         <div style="height: 20px" />
-        <el-carousel v-loading="!damages.length" indicator-position="outside" arrow="always" height="350px" :autoplay="false" ref="car">
+        <el-carousel v-show="damages.length" indicator-position="outside" arrow="always" height="350px" :autoplay="false" ref="car">
             <el-carousel-item v-for="damage in damages" :key="damage.id">
                 <el-image v-if="damage.image" :src="damage.image" fit="contain" style="height: 200px"/>
                 <div v-else v-loading="true" style="height: 200px"/>
@@ -71,6 +71,7 @@
                 </el-table>
             </el-carousel-item>
         </el-carousel>
+        <div v-if="loading" v-loading="true" style="height: 200px"/>
 		<Navbar :resultId="$route.params.project"/>
     </div>
 </template>
@@ -124,6 +125,7 @@ export default {
                         damage.severity = map[damage.severity];
                         damage.image = null;
                     }
+                    this.loading = false;
                     this.loadImages();
                 }); 
         },

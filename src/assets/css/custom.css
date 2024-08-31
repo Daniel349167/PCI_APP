@@ -51,3 +51,7 @@
     height: 36px;
     background-color: #2ECC74;
 }
+
+.el-carousel__arrow {
+    top: calc(50% - 70px);
+}
