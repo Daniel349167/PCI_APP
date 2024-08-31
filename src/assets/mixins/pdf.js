@@ -3,6 +3,7 @@ import Moment from 'moment';
 export const pdfmixin = {
     methods: {
         async downloadPDFList(samples) {
+            await this.removeFolder('PCI');
             for(var sample of samples) {
                 if(sample.damages.length == 0)
                     continue;
@@ -15,14 +16,14 @@ export const pdfmixin = {
                 await pdf.fromData(template, opts)
                     .then((base64) => {
                         var contentType = "application/pdf";
-                        var foldername = 'Fallas';
                         console.log(opts.fileName);
-                        this.savebase64AsPDF(foldername, opts.fileName, base64, contentType);  
+                        this.savebase64AsPDF('PCI', opts.fileName, base64, contentType);  
                     })
                     .catch((error) => console.log(error));
             }
         },
         async downloadPDFMetering(samples) {
+            await this.removeFolder('PCI');
             for(var sample of samples) {
                 if(sample.summary.length == 0)
                     continue;
@@ -35,14 +36,14 @@ export const pdfmixin = {
                 await pdf.fromData(template, opts)
                     .then((base64) => {
                         var contentType = "application/pdf";
-                        var foldername = 'Metrado';
                         console.log(opts.fileName);
-                        this.savebase64AsPDF(foldername, opts.fileName, base64, contentType);  
+                        this.savebase64AsPDF('PCI', opts.fileName, base64, contentType);  
                     })
                     .catch((error) => console.log(error));
             }
         },
         async downloadPDFDeduct(samples) {
+            await this.removeFolder('PCI');
             for(var sample of samples) {
                 if(sample.summary.length == 0)
                     continue;
@@ -55,14 +56,14 @@ export const pdfmixin = {
                 await pdf.fromData(template, opts)
                     .then((base64) => {
                         var contentType = "application/pdf";
-                        var foldername = 'ValoresDeducidos';
                         console.log(opts.fileName);
-                        this.savebase64AsPDF(foldername, opts.fileName, base64, contentType);  
+                        this.savebase64AsPDF('PCI', opts.fileName, base64, contentType);  
                     })
                     .catch((error) => console.log(error));
             }
         },
         async downloadPDFPCI(summary, project_name) {
+            await this.removeFolder('PCI');
             var opts = {
                 documentSize: 'A4',
                 fileName: `PCI_${Moment().format("YYYY_MM_DD_hh_mm_ss")}.pdf`,
@@ -72,9 +73,8 @@ export const pdfmixin = {
             await pdf.fromData(template, opts)
                 .then((base64) => {
                     var contentType = "application/pdf";
-                    var foldername = 'PCI';
                     console.log(opts.fileName);
-                    this.savebase64AsPDF(foldername, opts.fileName, base64, contentType);  
+                    this.savebase64AsPDF('PCI', opts.fileName, base64, contentType);  
                 })
                 .catch((error) => console.log(error));
         },
@@ -106,22 +106,41 @@ export const pdfmixin = {
             var DataBlob = this.b64toBlob(content,contentType);
             console.log("Starting to write the file :3");
             var folderpath = cordova.file.externalRootDirectory + "Download/";
-            window.resolveLocalFileSystemURL(folderpath, function(dir) {
+            window.resolveLocalFileSystemURL(folderpath, async function(dir) {
                 console.log("Access to the directory granted succesfully");
-                dir.getDirectory('PCI', { create: true }, function(dir2) {
-                    dir2.getDirectory(foldername, {create: true}, function(dir3) {
-                        dir3.getFile(filename, {create: true}, function(file) {
-                            console.log("File created succesfully.");
-                            file.createWriter(function(fileWriter) {
-                                console.log("Writing content to file");
-                                fileWriter.write(DataBlob);
-                            }, function(){
-                                alert('Unable to save file in path '+ folderpath);
-                            });
-                        })
+                dir.getDirectory(foldername, { create: true }, function(entry) {
+                    entry.getFile(filename, { create: true }, function(file) {
+                        console.log("File created succesfully.");
+                        file.createWriter(function(fileWriter) {
+                            console.log("Writing content to file");
+                            fileWriter.write(DataBlob);
+                        }, function(){
+                            alert('Unable to save file in path '+ folderpath);
+                        });
                     });
                 })
             });
+        },
+        async removeFolder(foldername) {
+            return new Promise(function(resolve) {
+                var folderpath = cordova.file.externalRootDirectory + "Download/";
+                window.resolveLocalFileSystemURL(folderpath, async function(dir) {
+                    dir.getDirectory(foldername, { create: true }, function(entry) {
+                        console.log("Removing folder");
+                        entry.removeRecursively(function (dir2) {
+                            console.log("Folder removed!");
+                            resolve();
+                        }, function (error) {
+                            console.log("error remove folder");
+                            console.dir(error);
+                            resolve();
+                        }, function () {
+                            console.log("PCI does not exist");
+                            resolve();
+                        });
+                    });
+                });
+            })
         },
         damageListTemplate(sample) {
             var content = this.tableStyle() + '<body style="font-size: 60px">';
