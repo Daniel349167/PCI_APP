@@ -6,6 +6,9 @@ export const sqlite = {
             db: null
         };
     },
+    mounted() {
+        this.db = Vue.prototype.$db;
+    },
     methods: {
         sqliteInit() {
             document.addEventListener('deviceready', () => {
@@ -14,8 +17,9 @@ export const sqlite = {
                     location: 'default',
                 });
                 console.log('sqliteInit');
-                console.log(this.db);
+                console.dir(this.db);
                 Vue.prototype.$db = this.db;
+                this.sqliteCreateTables(); // Crea las tablas si no existen
             });
         },
         sqliteTest() {
@@ -43,6 +47,7 @@ export const sqlite = {
             });
         },
         sqliteCreateProject(data) {
+            // Recordar añadir user_id al form
             var values = [
                 data.user_id,
                 data.name,
@@ -51,26 +56,38 @@ export const sqlite = {
                 data.longitudum,
                 data.longitudcarretera
             ]
-            db.transaction(function(tx) {
-                tx.executeSql('INSERT INTO projects(user_id, name, time, anchoum, longitudum, longitudcarretera) VALUES (?,?,?,?,?,?)', values);
-            });
+            this.db.executeSql(
+                'INSERT INTO projects(user_id, name, time, anchoum, longitudum, longitudcarretera) VALUES (?,?,?,?,?,?)',
+                values,
+                () => { console.log('INSERT success'); },
+                (error) => { console.log('INSERT error: ' + error.message); }
+            );
+            // TO DO
+            // Crear unidades de muestra
         },
-        sqliteGetProjects(user_id) {
+        async sqliteGetProjects(user_id) {
             var projects = [];
-            this.db.transaction((tx) => {
-                tx.executeSql('SELECT * FROM projects WHERE user_id=?', [user_id], function(tx, data) {
-                    for(var i=0; i>data.rows.length; i++)
+            await new Promise((resolve) => {
+                this.db.executeSql('SELECT * FROM projects WHERE user_id=?', [user_id], function(data) {
+                    for(var i=0; i<data.rows.length; i++)
                         projects.push(data.rows.item(i));
-                }, function(tx, error) {
-                  console.log('SELECT error: ' + error.message);
+                    resolve();
+                }, function(error) {
+                    console.log('SELECT error: ' + error.message);
+                    resolve();
                 });
             });
             return projects;
         },
         sqliteDeleteProject(project_id) {
-            this.db.transaction(function(tx) {
-                tx.executeSql('DELETE FROM projects WHERE id=?', [project_id]);
-            });
+            // TO DO
+            // Obtener daños y muestras del proyecto y eliminarlos
+            this.db.executeSql(
+                'DELETE FROM projects WHERE id=?',
+                [project_id],
+                () => { console.log('DELETE success'); },
+                (error) => { console.log('DELETE error: ' + error.message); }
+            );
         },
         sqliteCreateSample(data) {
             var values = [
@@ -82,19 +99,20 @@ export const sqlite = {
                 data.to_km,
                 data.to_m
             ]
-            db.transaction(function(tx) {
-                tx.executeSql('INSERT INTO projects(project_id, number, time, from_km, from_m, to_km, to_m) VALUES (?,?,?,?,?,?,?)', values);
-            });
+            this.db.executeSql(
+                'INSERT INTO projects(project_id, number, time, from_km, from_m, to_km, to_m) VALUES (?,?,?,?,?,?,?)',
+                values,
+                () => { console.log('INSERT success'); },
+                (error) => { console.log('INSERT error: ' + error.message); }
+            );
         },
         sqliteGetSamples(project_id) {
             var samples = [];
-            this.db.transaction((tx) => {
-                tx.executeSql('SELECT * FROM samples WHERE project_id=?', [project_id], function(tx, data) {
-                    for(var i=0; i>data.rows.length; i++)
-                        samples.push(data.rows.item(i));
-                }, function(tx, error) {
-                  console.log('SELECT error: ' + error.message);
-                });
+            this.db.executeSql('SELECT * FROM samples WHERE project_id=?', [project_id], function(tx, data) {
+                for(var i=0; i>data.rows.length; i++)
+                    samples.push(data.rows.item(i));
+            }, function(tx, error) {
+                console.log('SELECT error: ' + error.message);
             });
             return samples;
         },
@@ -107,19 +125,15 @@ export const sqlite = {
                 data.severity,
                 data.type
             ]
-            db.transaction(function(tx) {
-                tx.executeSql('INSERT INTO projects(sample_id, number, time, amount, severity, type) VALUES (?,?,?,?,?,?)', values);
-            });
+            this.db.executeSql('INSERT INTO projects(sample_id, number, time, amount, severity, type) VALUES (?,?,?,?,?,?)', values);
         },
-        sqliteGetDamage(sample_id) {
+        sqliteGetDamages(sample_id) {
             var damages = [];
-            this.db.transaction((tx) => {
-                tx.executeSql('SELECT * FROM damages WHERE sample_id=?', [sample_id], function(tx, data) {
-                    for(var i=0; i>data.rows.length; i++)
-                        damages.push(data.rows.item(i));
-                }, function(tx, error) {
-                  console.log('SELECT error: ' + error.message);
-                });
+            this.db.executeSql('SELECT * FROM damages WHERE sample_id=?', [sample_id], function(tx, data) {
+                for(var i=0; i>data.rows.length; i++)
+                    damages.push(data.rows.item(i));
+            }, function(tx, error) {
+                console.log('SELECT error: ' + error.message);
             });
             return damages;
         },
@@ -130,75 +144,82 @@ export const sqlite = {
                 data.type,
                 damage_id
             ]
-            this.db.transaction(function(tx) {
-                tx.executeSql(`
-                    UPDATE damages
-                    SET amount=?, severity=?, type=?
-                    WHERE id=?
-                `, values);
-            });
+            this.db.executeSql(`
+                UPDATE damages
+                SET amount=?, severity=?, type=?
+                WHERE id=?
+            `, values);
         },
         sqliteDeleteDamage(damage_id) {
-            this.db.transaction(function(tx) {
-                tx.executeSql('DELETE FROM damages WHERE id=?', [damage_id]);
-            });
+            this.db.executeSql(
+                'DELETE FROM damages WHERE id=?',
+                [damage_id],
+                () => { console.log('DELETE success'); },
+                (error) => { console.log('DELETE error: ' + error.message); }
+            );
         },
         sqliteCreateTables() {
             if(!window.sqlitePlugin) {
                 console.log('No sqlitePlugin');
                 return;
             }
-            this.db.transaction(function(tx) {
-                tx.executeSql(`
-                    CREATE TABLE IF NOT EXISTS projects (
-                        id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-                        user_id bigint(20) unsigned NOT NULL,
-                        name varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-                        time datetime NOT NULL,
-                        image longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-                        created_at timestamp NULL DEFAULT NULL,
-                        updated_at timestamp NULL DEFAULT NULL,
-                        anchoum decimal(15,2) DEFAULT NULL,
-                        longitudum decimal(15,2) DEFAULT NULL,
-                        longitudcarretera decimal(15,2) DEFAULT NULL,
-                        PRIMARY KEY (id),
-                        KEY projects_user_id_foreign (user_id),
-                        CONSTRAINT projects_user_id_foreign FOREIGN KEY (user_id) REFERENCES users (id)
-                )`);
-                tx.executeSql(`
-                    CREATE TABLE  IF NOT EXISTS samples (
-                        id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-                        project_id bigint(20) unsigned NOT NULL,
-                        number int(11) NOT NULL,
-                        time datetime NOT NULL,
-                        image longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-                        from_km int(11) DEFAULT NULL,
-                        from_m int(11) DEFAULT NULL,
-                        to_km int(11) DEFAULT NULL,
-                        to_m int(11) DEFAULT NULL,
-                        created_at timestamp NULL DEFAULT NULL,
-                        updated_at timestamp NULL DEFAULT NULL,
-                        PRIMARY KEY (id),
-                        KEY samples_project_id_foreign (project_id),
-                        CONSTRAINT samples_project_id_foreign FOREIGN KEY (project_id) REFERENCES projects (id)
-                )`);
-                tx.executeSql(`
-                    CREATE TABLE damages (
-                        id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-                        sample_id bigint(20) unsigned NOT NULL,
-                        number int(11) NOT NULL,
-                        time datetime NOT NULL,
-                        image longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-                        type int(11) DEFAULT NULL,
-                        severity int(11) DEFAULT NULL,
-                        amount decimal(8,1) DEFAULT NULL,
-                        created_at timestamp NULL DEFAULT NULL,
-                        updated_at timestamp NULL DEFAULT NULL,
-                        PRIMARY KEY (id),
-                        KEY surveys_sample_id_foreign (sample_id),
-                        CONSTRAINT surveys_sample_id_foreign FOREIGN KEY (sample_id) REFERENCES samples (id)
-                )`)
-            });
+            // TO DO
+            // Implementar claves foráneas
+            this.db.executeSql(`
+                CREATE TABLE IF NOT EXISTS projects (
+                    id integer PRIMARY KEY AUTOINCREMENT,
+                    user_id bigint NOT NULL,
+                    name character varying(255) NOT NULL,
+                    time timestamp(0) NOT NULL,
+                    image text,
+                    anchoum numeric(15,2),
+                    longitudum numeric(15,2),
+                    longitudcarretera numeric(15,2)
+                )
+            `, [], ()=>{}, (error) => { console.log('CREATE TABLE IF NOT EXISTS error: ' + error.message); });
+            this.db.executeSql(`
+                CREATE TABLE IF NOT EXISTS samples (
+                    id integer PRIMARY KEY AUTOINCREMENT,
+                    project_id bigint NOT NULL,
+                    number integer NOT NULL,
+                    time timestamp(0) NOT NULL,
+                    image text,
+                    to_m integer,
+                    to_km integer,
+                    from_m integer,
+                    from_km integer
+                )
+            `, [], ()=>{}, (error) => { console.log('CREATE TABLE IF NOT EXISTS error: ' + error.message); });
+            this.db.executeSql(`
+                CREATE TABLE IF NOT EXISTS damages (
+                    id integer PRIMARY KEY AUTOINCREMENT,
+                    sample_id bigint NOT NULL,
+                    number integer NOT NULL,
+                    time timestamp(0) NOT NULL,
+                    image text,
+                    amount numeric(8,1),
+                    severity integer,
+                    type integer
+                )
+            `, [], ()=>{}, (error) => { console.log('CREATE TABLE IF NOT EXISTS error: ' + error.message); })
+        },
+        sqliteTruncateTables() {
+            if(!window.sqlitePlugin) {
+                console.log('No sqlitePlugin');
+                return;
+            }
+            this.db.executeSql('DELETE FROM damages');
+            this.db.executeSql('DELETE FROM samples');
+            this.db.executeSql('DELETE FROM projects');
+        },
+        sqliteDeleteTables() {
+            if(!window.sqlitePlugin) {
+                console.log('No sqlitePlugin');
+                return;
+            }
+            this.db.executeSql('DROP TABLE IF EXISTS damages');
+            this.db.executeSql('DROP TABLE IF EXISTS samples');
+            this.db.executeSql('DROP TABLE IF EXISTS projects');
         }
     }
 }
