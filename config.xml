@@ -25,6 +25,7 @@
         <preference name="AndroidWindowSplashScreenAnimatedIcon" value="src/assets/images/splash.png" />
         <preference name="ShowSplashScreenSpinner" value="false"/>
         <preference name="SplashMaintainAspectRatio" value="true"/>
+        <preference name="GOOGLE_WEB_CLIENT_ID" value="720460114712-a4ba4q0rgi8coo926piocl9c69m91rf3.apps.googleusercontent.com" />
         <edit-config file="app/src/main/AndroidManifest.xml" mode="merge" target="/manifest/application">
             <application android:usesCleartextTraffic="true" />
         </edit-config>

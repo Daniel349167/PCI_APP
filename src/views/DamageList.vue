@@ -7,7 +7,7 @@
         <div style="height: 20px" />
         <table>
             <tr>
-                <td style="width: 100px; text-align: right;">
+                <td style="width: 100px; text-align: right; font-weight: bold;">
                     Proyecto:
                 </td>
                 <td style="text-align: left">
@@ -15,7 +15,7 @@
                 </td>
             </tr>
             <tr>
-                <td style="text-align: right;">
+                <td style="text-align: right; font-weight: bold;">
                     UM:
                 </td>
                 <td style="text-align: left">
@@ -23,7 +23,7 @@
                 </td>
             </tr>
             <tr>
-                <td style="text-align: right;">
+                <td style="text-align: right; font-weight: bold;">
                     Del:
                 </td>
                 <td style="text-align: left">
@@ -31,7 +31,7 @@
                 </td>
             </tr>
             <tr>
-                <td style="text-align: right;">
+                <td style="text-align: right; font-weight: bold;">
                     Al:
                 </td>
                 <td style="text-align: left">
@@ -158,3 +158,14 @@ export default {
     }
 }
 </script>
+
+<style>
+.el-carousel__arrow--left {
+    left: 0px; 
+}
+
+.el-carousel__arrow--right {
+    right: 0px; 
+}
+
+</style>

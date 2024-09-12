@@ -29,7 +29,16 @@
     background-color: #2ECC74;
 }
 .delete-card .el-card__body {
-    background-color: #E63535 !important;
+    background-color: #00CFFF; /* Fondo celeste para todos los cards en modo eliminar */
+    border: 3px solid #0099CC; 
+}
+
+
+
+/* Cambios al pasar el cursor */
+.delete-card .el-card__body:hover {
+    background-color: #f44336 !important; /* Fondo rojo */
+    border: 3px solid #B71C1C !important; /* Borde rojo oscuro */
 }
 
 .message {

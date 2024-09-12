@@ -10,6 +10,7 @@
     "start": "npm run dev"
   },
   "dependencies": {
+    "cordova-plugin-googleplus": "8.5.2",
     "element-ui": "^2.15.14",
     "moment": "^2.30.1",
     "vue": "^2.5.2",
@@ -31,6 +32,7 @@
     "cordova-pdf-generator": "^2.1.1",
     "cordova-plugin-camera": "^7.0.0",
     "cordova-plugin-file": "^8.1.0",
+    "cordova-plugin-nativestorage": "^2.3.2",
     "cordova-sqlite-storage": "^6.1.0",
     "css-loader": "^0.28.0",
     "extract-text-webpack-plugin": "^3.0.0",
@@ -78,7 +80,11 @@
       "cordova-plugin-file": {
         "ANDROIDX_WEBKIT_VERSION": "1.4.0"
       },
-      "cordova-sqlite-storage": {}
+      "cordova-sqlite-storage": {},
+      "cordova-plugin-nativestorage": {},
+      "cordova-plugin-googleplus": {
+        "REVERSED_CLIENT_ID": "com.googleusercontent.apps.720460114712-uf9c68cnthhilqntqn75hc24gnt24i4r"
+      }
     }
   }
 }

@@ -8,7 +8,7 @@
 		<div v-for="project in projects" :key="project.id" style="margin: 20px 0px"
             @click="goto('/results/'+project.id)"
         >
-			<el-card>
+        <el-card class="el-card-verde">
 				<el-row>
 					<el-col :span="8">
 						<el-image :src="project.image" fit="contain"/>
@@ -80,5 +80,9 @@ export default {
 <style>
 .project-results .el-card__body {
     padding: 10px 20px;
+}
+
+.el-card-verde {
+    border: 3px solid #28B065 !important; /* Un tono más oscuro que el fondo */
 }
 </style>

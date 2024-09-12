@@ -7,14 +7,17 @@
         <div v-if="loading" v-loading="true" style="height: 160px" />
         <div>
             <div v-for="project in projects" :key="project.id" style="margin: 20px 0px"
-                @click="delete_mode ? (delete_project_id = project.id) : goto('/projects/'+project.id)"
-            >
-                <el-card :class="delete_mode ? 'delete-card' : ''">
+            @click="delete_mode ? (delete_project_id = project.id) : goto('/projects/'+project.id)">
+            <el-card :class="{
+                'delete-card': delete_mode,
+                'el-card-verde': !delete_mode,
+                'el-card-azul': delete_mode
+            }">
                     <el-row>
                         <el-col :span="8">
                             <el-image :src="project.image" fit="contain"/>
                         </el-col>
-                        <el-col :span="16" style="text-align: left; padding: 0px 20px">
+                        <el-col :span="14" style="text-align: left; padding: 0px 20px">
                             <div style="font-size: 16px; font-weight: bold">
                                 {{ project.name }}
                             </div>
@@ -22,14 +25,27 @@
                                 {{ project.time }}
                             </div>
                         </el-col>
+                        <el-col :span="2" style="position: absolute; top: -15px; right: -15px;">
+                            <!-- Menú personalizado -->
+                            <div class="custom-dropdown">
+                                <span @click.stop="toggleMenu(project.id)">⋮</span> <!-- Usamos @click.stop -->
+                                <ul v-if="activeDropdown === project.id" class="custom-dropdown-menu">
+                                    <li @click.stop="editProjectName(project)">Editar Nombre</li>
+                                </ul>
+                            </div>
+                        </el-col>
+
                     </el-row>
                 </el-card>
             </div>
+
+
+
         </div>
         <div class="float" v-if="!delete_mode">
-            <el-button @click="dialogVisible = true" icon="el-icon-plus" circle></el-button>
-            <div style="height: 10px;" />
             <el-button @click="delete_mode = true" icon="el-icon-delete" circle></el-button>
+            <el-button @click="dialogVisible = true" icon="el-icon-plus" circle></el-button>
+        
         </div>
         <div class="float delete-buttons" v-else>
             <el-button @click="delete_mode = false" icon="el-icon-close" circle></el-button>
@@ -70,13 +86,47 @@
         </el-dialog>
         <el-dialog
             :visible="delete_project_id != null"
-            width="80%"
-            style="margin-top: 20vh;"
+            width="90%"
+            :before-close="() => delete_project_id = null"
+            center
+            class="custom-delete-modal"
         >
-            <span>¿Eliminar proyecto?</span>
+            <div style="text-align: center;">
+                <el-icon style="font-size: 48px; color: #f56c6c;">
+                    <i class="el-icon-warning"></i>
+                </el-icon>
+                <p style="font-size: 18px; font-weight: bold; margin-top: 10px; color: #333;">
+                    ¿Eliminar proyecto "{{ projectToDelete.name }}"?
+                </p>
+                <p style="font-size: 14px; color: #666; margin-top: 5px;">
+                    Esta acción no se puede deshacer. ¿Estás seguro?
+                </p>
+            </div>
+            <span slot="footer" class="dialog-footer" style="text-align: center; padding: 10px 0;">
+                <el-button @click="delete_project_id = null" style="width: 120px;">No</el-button>
+                <el-button 
+                    type="danger" 
+                    @click="deleteProject(delete_project_id)" 
+                    style="width: 120px; margin-left: 10px;">
+                    Sí
+                </el-button>
+            </span>
+        </el-dialog>
+
+
+
+        <el-dialog
+            title="Editar nombre del proyecto"
+            :visible.sync="editDialogVisible"
+            width="90%"
+        >
+            <div>
+                <label for="edit_project_name" class="input-label">Nombre del proyecto</label>
+                <el-input v-model="editForm.name" id="edit_project_name"/>
+            </div>
             <span slot="footer" class="dialog-footer">
-            <el-button @click="delete_project_id = null">No</el-button>
-            <el-button type="primary" @click="deleteProject(delete_project_id)">Sí</el-button>
+                <el-button @click="editDialogVisible = false">Cancelar</el-button>
+                <el-button type="primary" @click="saveProjectName">Guardar</el-button>
             </span>
         </el-dialog>
 
@@ -101,6 +151,12 @@ export default {
             projects: [],
             loading: true,
             dialogVisible: false,
+            editDialogVisible: false,
+            activeDropdown: null,
+            editForm: {
+                id: null,
+                name: ''
+            },
             form: {
                 name: '',
                 anchoum: null,
@@ -114,14 +170,51 @@ export default {
     mounted() {
         console.log('Projects');
         this.loadProjects()
-        this.sqliteTest();
     },
     computed: {
         goodAl() {
             return this.form.longitudum*this.form.anchoum >= 135 && this.form.longitudum*this.form.anchoum <= 315;
+        },
+        projectToDelete() {
+            return this.projects.find(project => project.id === this.delete_project_id) || {};
         }
     },
     methods: {
+        toggleMenu(projectId) {
+            // Alterna el menú desplegable. Si está abierto, lo cierra.
+            this.activeDropdown = this.activeDropdown === projectId ? null : projectId;
+        },
+        editProjectName(project) {
+            this.editForm.id = project.id;
+            this.editForm.name = project.name;
+            this.editDialogVisible = true; // Muestra el modal
+            this.activeDropdown = null; // Cierra el menú desplegable
+        },
+        saveProjectName() {
+            fetch(`${this.authBaseUrl()}/api/projects/${this.editForm.id}`, {
+                method: 'PUT',
+                headers: this.authHeaders(),
+                body: JSON.stringify({ name: this.editForm.name })
+            })
+            .then(resp => resp.json())
+            .then(data => {
+                if (data.message === 'Project name updated successfully') {
+                    this.$message({
+                        message: 'Nombre del proyecto actualizado',
+                        type: 'success',
+                        showClose: true,
+                    });
+                    this.editDialogVisible = false;
+                    this.loadProjects();
+                } else {
+                    this.$message({
+                        message: 'Error al actualizar el nombre del proyecto',
+                        type: 'error',
+                        showClose: true,
+                    });
+                }
+            });
+        },
         goto(route) {
             this.$router.push(route);
         },
@@ -234,20 +327,74 @@ export default {
     }
 }
 </script>
-<style scoped>
+<style>
 .float {
     position: fixed;
     bottom: 80px;
-    right: 20px;
+    right: 10px;
+    display: flex;
+    justify-content: space-between;
+    width: 93%; /* Ajusta el ancho si es necesario */
 }
 .float .el-button {
-    border-color: #2ECC74;
+    border-color: #2ECC74 !important;
     border-width: 3px;
-    color: #2ECC74;
+    color: #2ECC74 !important;
     font-size: 24px;
 }
 .float.delete-buttons .el-button {
     border-color: #E63535;
     color: #E63535;
 }
+
+.el-card-verde {
+    border: 3px solid #28B065 !important; /* Un tono más oscuro que el fondo */
+}
+.el-card-azul {
+    border: 3px solid #0099CC !important; /* Borde azul cuando está en modo delete */
+}
+
+.custom-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.custom-dropdown span {
+    cursor: pointer;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.custom-dropdown-menu {
+    position: absolute;
+    background-color: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    width: 150px;
+    top: 100%;
+    right: 0;
+}
+
+.custom-dropdown-menu li {
+    padding: 10px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+}
+
+.custom-dropdown-menu li:hover {
+    background-color: #f5f5f5;
+}
+
+.custom-delete-modal .el-dialog__footer {
+    text-align: center;
+}
+
+.custom-delete-modal p {
+    margin: 0;
+    padding: 5px 0;
+}
+
 </style>

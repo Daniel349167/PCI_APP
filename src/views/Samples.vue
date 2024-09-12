@@ -186,4 +186,8 @@ export default {
 .blue-card .el-card__body  {
     background-color: #2C39A994;
 }
+
+.el-card__body {
+    border: 0px solid #1F2A87 !important;
+}
 </style>

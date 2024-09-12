@@ -5,7 +5,7 @@
 			SOPORTE
 		</div>
 		<div class="support-div">
-			<el-card>
+			<el-card class="el-card-verde">
 				<table>
 					<tr>
 						<th style="width: 80%; text-align: left">
@@ -25,7 +25,7 @@
 					</tr>
 				</table>
 			</el-card>
-			<el-card>
+			<el-card class="el-card-verde">
 				<table style="width: 100%" >
 					<tr>
 						<th style="text-align: left" colspan="2">
@@ -101,5 +101,8 @@ export default {
 }
 .support-div table {
 	width: 100%;
+}
+.el-card-verde {
+    border: 3px solid #28B065 !important; /* Un tono más oscuro que el fondo */
 }
 </style>
