@@ -83,7 +83,8 @@
       "cordova-sqlite-storage": {},
       "cordova-plugin-nativestorage": {},
       "cordova-plugin-googleplus": {
-        "REVERSED_CLIENT_ID": "com.googleusercontent.apps.720460114712-uf9c68cnthhilqntqn75hc24gnt24i4r"
+        "REVERSED_CLIENT_ID": "com.googleusercontent.apps.720460114712-uf9c68cnthhilqntqn75hc24gnt24i4r",
+        "PLAY_SERVICES_VERSION": "15.0.1"
       }
     }
   }

@@ -5,8 +5,7 @@
         </div>
         <br>
         <p>¡Bienvenido a PCI Android!</p>
-        <p>Por favor, ingrese su correo electrónico y contraseña. Si aún no tiene una cuenta, regístrese para crear una.
-        </p>
+        <p>Por favor, ingrese su correo electrónico y contraseña. Si aún no tiene una cuenta, regístrese para crear una.</p>
         <br>
         <div>
             <label for="email" class="input-label">Correo</label>
@@ -19,7 +18,7 @@
         </div>
         <br>
         <div>
-            <el-button type="primary" @click="login()">Iniciar Sesión</el-button>
+            <el-button type="primary" @click="login">Iniciar Sesión</el-button>
         </div>
         <br>
         <div>
@@ -57,10 +56,23 @@ export default {
             }
         }
     },
+    mounted() {
+        document.addEventListener('deviceready', this.onDeviceReady, false);
+    },
+    beforeDestroy() {
+        document.removeEventListener('deviceready', this.onDeviceReady, false);
+    },
     methods: {
+        // Método que se ejecuta cuando el dispositivo está listo
+        onDeviceReady() {
+            // No realizar login automático al montar el componente
+            // La autenticación se manejará explícitamente
+        },
+        // Redirigir a una ruta específica
         goto(route) {
             this.$router.push(route);
         },
+        // Validar el formulario de inicio de sesión
         validateForm() {
             if (!this.form.email || !this.form.password) {
                 this.$message({
@@ -74,10 +86,11 @@ export default {
             }
             return true;
         },
+        // Método de inicio de sesión con email y contraseña
         login() {
             if (!this.validateForm()) return;
 
-            var loading = this.$loading();
+            const loading = this.$loading();
             fetch(this.authBaseUrl() + '/api/login', {
                 method: 'POST',
                 headers: {
@@ -88,13 +101,10 @@ export default {
             })
                 .then(resp => resp.json())
                 .then(data => {
+                    loading.close();
                     if (data.status) {
-                        // Almacenando el token con NativeStorage
-                        NativeStorage.setItem('api_token', data.token, () => {
-                            this.goto('home');  // Redirigir al Home
-                        }, error => {
-                            console.error('Error al guardar el token:', error);
-                        });
+                        localStorage.setItem('api_token', data.token);
+                        this.goto('home');  // Redirigir al Home
                     } else {
                         this.$message({
                             showClose: true,
@@ -104,9 +114,10 @@ export default {
                             customClass: 'message'
                         });
                     }
-                    loading.close();
                 })
                 .catch(error => {
+                    loading.close();
+                    console.error("Error en el inicio de sesión:", error);
                     this.$message({
                         showClose: true,
                         message: 'Ocurrió un error en el servidor',
@@ -114,54 +125,178 @@ export default {
                         center: true,
                         customClass: 'message'
                     });
-                    loading.close();
                 });
         },
+        // Método para iniciar sesión con Google manualmente
         loginWithGoogle() {
-            window.plugins.googleplus.login(
-                {
-                    'webClientId': '720460114712-uf9c68cnthhilqntqn75hc24gnt24i4r.apps.googleusercontent.com',
-                    'offline': true, // Habilita el acceso a un token de actualización
-                },
-                (obj) => {
-                    console.log("Usuario autenticado:", obj);
-                    // Enviar el idToken al backend para verificar
-                    fetch(`${this.authBaseUrl()}/api/auth/google/callback?idToken=${obj.idToken}`, {
-                        method: 'GET',  // Usar GET y pasar el token como parámetro de URL
-                        headers: {
-                            "Accept": "application/json",
-                        }
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.token) {
-                            NativeStorage.setItem('api_token', data.token, () => {
-                                this.goto('home');  // Redirigir al Home
-                            }, (error) => {
-                                console.error('Error al guardar el token:', error);
-                            });
-                        } else {
-                            console.error("Error en la autenticación:", data);
-                        }
-                    })
-                    .catch(error => {
-                        console.error("Error en el proceso de autenticación:", error);
-                    });
+            const loading = this.$loading({
+                lock: true,
+                text: 'Autenticando...',
+                spinner: 'el-icon-loading',
+                background: 'rgba(0, 0, 0, 0.7)'
+            });
 
-                },
-                (msg) => {
+            if (window.plugins && window.plugins.googleplus) {
+                window.plugins.googleplus.login(
+                    {
+                        'webClientId': '720460114712-uf9c68cnthhilqntqn75hc24gnt24i4r.apps.googleusercontent.com',
+                        'offline': true,
+                        // 'prompt': 'select_account' // Opcional: comentar para evitar errores
+                    },
+                    (obj) => {
+                        this.handleGoogleLogin(obj);
+                    },
+                    (msg) => {
+                        loading.close();
+                        console.error("Error al autenticar con Google:", msg);
+                        this.$message({
+                            showClose: true,
+                            message: 'Error al autenticar con Google: ' + msg,
+                            type: 'error',
+                            center: true,
+                            customClass: 'message'
+                        });
+                    }
+                );
+            } else {
+                loading.close();
+                console.error("Plugin GooglePlus no está disponible.");
+                this.$message({
+                    showClose: true,
+                    message: 'GooglePlus plugin no está disponible.',
+                    type: 'error',
+                    center: true,
+                    customClass: 'message'
+                });
+            }
+        },
+        // Manejar el inicio de sesión exitoso con Google
+        handleGoogleLogin(obj) {
+            const loading = this.$loading({
+                lock: true,
+                text: 'Autenticando...',
+                spinner: 'el-icon-loading',
+                background: 'rgba(0, 0, 0, 0.7)'
+            });
+
+            fetch(`${this.authBaseUrl()}/api/auth/google/callback?idToken=${obj.idToken}`, {
+                method: 'GET',
+                headers: {
+                    "Accept": "application/json",
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    loading.close();
+                    if (data.token) {
+                        localStorage.setItem('api_token', data.token);
+                        this.goto('home');
+                    } else {
+                        console.error("Error en la autenticación:", data);
+                        this.$message({
+                            showClose: true,
+                            message: 'Error en la autenticación con Google.',
+                            type: 'error',
+                            center: true,
+                            customClass: 'message'
+                        });
+                    }
+                })
+                .catch(error => {
+                    loading.close();
+                    console.error("Error en el proceso de autenticación:", error);
                     this.$message({
                         showClose: true,
-                        message: 'Error al autenticar con Google: ' + msg,
+                        message: 'Error en el proceso de autenticación.',
                         type: 'error',
                         center: true,
                         customClass: 'message'
                     });
-                    console.error("Error al autenticar:", msg);
-                }
-            );
-        }
+                });
+        },
+        // Método para cerrar sesión con Google
+        handleGoogleLogout() {
+            if (window.plugins && window.plugins.googleplus) {
+                window.plugins.googleplus.logout(
+                    () => {
+                        this.clearLocalStorage();
+                        this.goto('login');
+                        this.$message({
+                            showClose: true,
+                            message: 'Sesión cerrada exitosamente.',
+                            type: 'success',
+                            center: true,
+                            customClass: 'message'
+                        });
+                    },
+                    (error) => {
+                        console.error('Error al cerrar sesión:', error);
+                        this.$message({
+                            showClose: true,
+                            message: 'Error al cerrar sesión con Google.',
+                            type: 'error',
+                            center: true,
+                            customClass: 'message'
+                        });
+                    }
+                );
+            } else {
+                console.error("Plugin GooglePlus no está disponible.");
+                this.$message({
+                    showClose: true,
+                    message: 'GooglePlus plugin no está disponible.',
+                    type: 'error',
+                    center: true,
+                    customClass: 'message'
+                });
+            }
+        },
+        // Método para limpiar el localStorage
+        clearLocalStorage() {
+            localStorage.removeItem('api_token');
+        },
+        // Validar el token almacenado en el localStorage
+        validateToken(token) {
+            const loading = this.$loading({
+                lock: true,
+                text: 'Validando sesión...',
+                spinner: 'el-icon-loading',
+                background: 'rgba(0, 0, 0, 0.7)'
+            });
 
+            fetch(`${this.authBaseUrl()}/api/auth/validate`, {
+                method: 'POST',
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Accept": "application/json"
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    loading.close();
+                    if (data.valid) {
+                        this.goto('home');
+                    } else {
+                        this.clearLocalStorage();
+                        // No intentar un login silencioso automáticamente
+                        // El usuario debe iniciar sesión manualmente
+                    }
+                })
+                .catch(error => {
+                    loading.close();
+                    console.error("Error al validar el token:", error);
+                    this.clearLocalStorage();
+                    // No intentar un login silencioso automáticamente
+                });
+        }
     }
 }
 </script>
+
+<style scoped>
+.input-label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+</style>

@@ -1,11 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget
-    id="com.pciandroid.pciandroid"
-    version="1.0.0"
-    xmlns="http://www.w3.org/ns/widgets"
-    xmlns:cdv="http://cordova.apache.org/ns/1.0"
-    xmlns:android="http://schemas.android.com/apk/res/android" 
->
+<widget id="com.pciandroid.pciandroid" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>PCI Android</name>
     <description>
         A sample Apache Cordova application that responds to the deviceready event.
@@ -13,7 +7,7 @@
     <author email="dev@cordova.apache.org" href="http://cordova.io">
         Apache Cordova Team
     </author>
-    <content src="http://localhost/index.html" />
+    <content src="index.html" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
@@ -23,12 +17,12 @@
     <allow-intent href="geo:*" />
     <platform name="android">
         <preference name="AndroidWindowSplashScreenAnimatedIcon" value="src/assets/images/splash.png" />
-        <preference name="ShowSplashScreenSpinner" value="false"/>
-        <preference name="SplashMaintainAspectRatio" value="true"/>
-        <preference name="GOOGLE_WEB_CLIENT_ID" value="720460114712-a4ba4q0rgi8coo926piocl9c69m91rf3.apps.googleusercontent.com" />
+        <preference name="ShowSplashScreenSpinner" value="false" />
+        <preference name="SplashMaintainAspectRatio" value="true" />
+        <preference name="GOOGLE_WEB_CLIENT_ID" value="720460114712-uf9c68cnthhilqntqn75hc24gnt24i4r.apps.googleusercontent.com" />
         <edit-config file="app/src/main/AndroidManifest.xml" mode="merge" target="/manifest/application">
             <application android:usesCleartextTraffic="true" />
         </edit-config>
     </platform>
-    <allow-navigation href="*"/>
+    <allow-navigation href="*" />
 </widget>

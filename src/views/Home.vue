@@ -22,7 +22,7 @@
     <el-button @click="syncWithCloud" type="primary" style="margin-top: 10px;" icon="el-icon-refresh">
       Sincronizar con la Nube
     </el-button>
-    <el-button @click="showSqliteData" type="primary">Ver Tablas SQLite</el-button>
+    <!-- <el-button @click="showSqliteData" type="primary">Ver Tablas SQLite</el-button> -->
 
     <!-- Modal Mejorado de Cerrar Sesión -->
     <el-dialog title="Confirmar Cierre de Sesión" :visible.sync="dialogVisible" width="90%" center>
@@ -31,8 +31,9 @@
           <i class="el-icon-warning"></i>
         </el-icon>
         <p style="font-size: 18px; font-weight: bold; margin-top: 10px; color: #333;">
-          ¿Estás seguro que desea cerrar sesión?
-        </p>
+          ¿Estás seguro que desea<br>cerrar sesión?
+      </p>
+
         <p style="font-size: 14px; color: #666; margin-top: 5px;">
           Perderás el acceso a tu cuenta y deberás volver a iniciar sesión.
         </p>
@@ -70,17 +71,14 @@ export default {
       console.log('logout');
       localStorage.removeItem("api_token");
       // Eliminar el token usando NativeStorage
-      NativeStorage.remove("api_token", () => {
-        // Redirigir al login después de eliminar el token
-        this.$router.push('/login');
-      }, (error) => {
-        console.error('Error al eliminar el token:', error);
-      });
+      this.$router.push('/login');
+    
     },
     showSqliteData() {
       this.sqliteListTables(); // Método que prueba y muestra la información de SQLite
     }
 
   }
+  
 }
 </script>
