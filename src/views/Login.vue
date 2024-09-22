@@ -57,18 +57,17 @@ export default {
         }
     },
     mounted() {
+        const token = localStorage.getItem('api_token');
+        if (token) {
+            this.validateToken(token);
+        }
         document.addEventListener('deviceready', this.onDeviceReady, false);
     },
     beforeDestroy() {
         document.removeEventListener('deviceready', this.onDeviceReady, false);
     },
     methods: {
-        // Método que se ejecuta cuando el dispositivo está listo
-        onDeviceReady() {
-            // No realizar login automático al montar el componente
-            // La autenticación se manejará explícitamente
-        },
-        // Redirigir a una ruta específica
+
         goto(route) {
             this.$router.push(route);
         },
@@ -127,7 +126,7 @@ export default {
                     });
                 });
         },
-        // Método para iniciar sesión con Google manualmente
+        // Método para iniciar sesión con Google
         loginWithGoogle() {
             const loading = this.$loading({
                 lock: true,
@@ -140,10 +139,13 @@ export default {
                 window.plugins.googleplus.login(
                     {
                         'webClientId': '720460114712-uf9c68cnthhilqntqn75hc24gnt24i4r.apps.googleusercontent.com',
-                        'offline': true,
-                        // 'prompt': 'select_account' // Opcional: comentar para evitar errores
+                        'prompt': 'select_account',
+                        // Establecemos 'offline' en false para evitar solicitar refresh_token
+                        'offline': false,
+                        'scopes': 'email profile' // Añadimos los scopes necesarios
                     },
                     (obj) => {
+                        loading.close();
                         this.handleGoogleLogin(obj);
                     },
                     (msg) => {
@@ -278,7 +280,6 @@ export default {
                         this.goto('home');
                     } else {
                         this.clearLocalStorage();
-                        // No intentar un login silencioso automáticamente
                         // El usuario debe iniciar sesión manualmente
                     }
                 })
